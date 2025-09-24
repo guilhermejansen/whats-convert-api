@@ -1,0 +1,18 @@
+{
+  "name": "whats-convert-api",
+  "version": "0.0.0",
+  "private": true,
+  "description": "High-performance WhatsApp media conversion API built in Go with Fiber.",
+  "scripts": {
+    "semantic-release": "semantic-release"
+  },
+  "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^12.0.0",
+    "@semantic-release/exec": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^11.0.0",
+    "@semantic-release/release-notes-generator": "^12.0.0",
+    "semantic-release": "^23.0.0"
+  }
+}
