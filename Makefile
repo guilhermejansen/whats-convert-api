@@ -8,6 +8,7 @@ DOCKER_REGISTRY ?=
 DOCKER_REPOSITORY ?= $(DOCKER_IMAGE)
 DOCKER_TAG ?= $(VERSION)
 DOCKER_IMAGE_REF := $(if $(DOCKER_REGISTRY),$(DOCKER_REGISTRY)/)$(DOCKER_REPOSITORY)
+GOLANGCI_VERSION ?= v1.61.0
 GO_FILES = $(shell find . -name '*.go' -type f)
 BINARY = $(APP_NAME)
 
@@ -58,7 +59,8 @@ benchmark: ## Run benchmarks
 
 lint: ## Run linter
 	@echo "${GREEN}Running linter...${NC}"
-	@which golangci-lint > /dev/null || (echo "${RED}Installing golangci-lint...${NC}" && go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest)
+	@echo "${GREEN}Ensuring golangci-lint $(GOLANGCI_VERSION) is installed...${NC}"
+	GOFLAGS='' GOBIN=$(GOPATH)/bin go install github.com/golangci/golangci-lint/cmd/golangci-lint@$(GOLANGCI_VERSION)
 	golangci-lint run
 
 clean: ## Clean build artifacts
