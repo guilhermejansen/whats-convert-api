@@ -1,0 +1,93 @@
+version: '3.8'
+
+services:
+  # media-converter:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   container_name: whats-media-converter
+  #   ports:
+  #     - "8080:8080"
+  #   environment:
+  #     - PORT=8080
+  #     - GOGC=100
+  #     - GOMEMLIMIT=2GiB
+  #     - GOMAXPROCS=0
+  #     - MAX_WORKERS=0
+  #     - BUFFER_POOL_SIZE=100
+  #     - BUFFER_SIZE=10485760
+  #     - REQUEST_TIMEOUT=5m
+  #     - BODY_LIMIT=524288000
+  #     - READ_TIMEOUT=5m
+  #     - WRITE_TIMEOUT=5m
+  #     # S3 Configuration
+  #     - S3_ENABLED=true
+  #     - S3_PROVIDER=minio
+  #     - S3_ENDPOINT=http://minio:9000
+  #     - S3_PUBLIC_ENDPOINT=http://localhost:9001
+  #     - S3_REGION=us-east-1
+  #     - S3_BUCKET=uploads
+  #     - S3_ACCESS_KEY=minioadmin
+  #     - S3_SECRET_KEY=minioadmin123
+  #     - S3_PATH_STYLE=true
+  #     - S3_PUBLIC_READ=true
+  #     - S3_EXPIRATION_DAYS=0
+  #   volumes:
+  #     # Use tmpfs for temporary files (RAM storage)
+  #     - type: tmpfs
+  #       target: /tmp
+  #       tmpfs:
+  #         size: 4G
+  #     - type: tmpfs
+  #       target: /dev/shm
+  #       tmpfs:
+  #         size: 4G
+  #   depends_on:
+  #     - minio
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: '4'
+  #         memory: 6G
+  #       reservations:
+  #         cpus: '2'
+  #         memory: 3G
+  #   restart: unless-stopped
+  #   networks:
+  #     - media-network
+  #   healthcheck:
+  #     test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/health"]
+  #     interval: 10s
+  #     timeout: 3s
+  #     retries: 3
+  #     start_period: 10s
+
+  # MinIO for S3-compatible object storage
+  minio:
+    image: quay.io/minio/minio:RELEASE.2025-04-08T15-41-24Z
+    container_name: minio-storage
+    ports:
+      - "9000:9000"  # API
+      - "9001:9001"  # Console
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin123
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_whats_convert_data:/data
+    networks:
+      - media-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+volumes:
+  minio_whats_convert_data:
+    driver: local
+
+networks:
+  media-network:
+    driver: bridge

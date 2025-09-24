@@ -1,0 +1,150 @@
+<!-- Main converter interface -->
+<div class="converters-grid">
+    <!-- WhatsApp Converter Module -->
+    <section class="converter-module whatsapp-module">
+        <div class="module-header">
+            <div class="module-icon">📱</div>
+            <h2 class="module-title">WhatsApp Converter</h2>
+            <p class="module-description">Convert audio and images to WhatsApp-optimized formats</p>
+        </div>
+
+        <div class="module-content">
+            <!-- File Upload Area -->
+            <div class="upload-area" id="whatsapp-upload-area">
+                <div class="upload-zone" id="whatsapp-drop-zone">
+                    <div class="upload-icon">📎</div>
+                    <p class="upload-text">
+                        <strong>Drop audio/image files here</strong><br>
+                        or <span class="upload-link">browse to select</span>
+                    </p>
+                    <input type="file" id="whatsapp-file-input" accept="audio/*,image/*" multiple hidden>
+                </div>
+            </div>
+
+            <!-- File List -->
+            <div class="file-list" id="whatsapp-file-list"></div>
+
+            <!-- Actions -->
+            <div class="module-actions">
+                <button class="btn btn-primary" id="whatsapp-convert-btn" disabled>
+                    Convert for WhatsApp
+                </button>
+                <button class="btn btn-secondary" id="whatsapp-clear-btn">
+                    Clear Files
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Base64 Converter Module -->
+    <section class="converter-module base64-module">
+        <div class="module-header">
+            <div class="module-icon">🔗</div>
+            <h2 class="module-title">Base64 Converter</h2>
+            <p class="module-description">Convert any file to Base64 format for copy/paste</p>
+        </div>
+
+        <div class="module-content">
+            <!-- File Upload Area -->
+            <div class="upload-area" id="base64-upload-area">
+                <div class="upload-zone" id="base64-drop-zone">
+                    <div class="upload-icon">📄</div>
+                    <p class="upload-text">
+                        <strong>Drop any file here</strong><br>
+                        or <span class="upload-link">browse to select</span>
+                    </p>
+                    <input type="file" id="base64-file-input" hidden>
+                </div>
+            </div>
+
+            <!-- Progress -->
+            <div class="progress-container hidden" id="base64-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="base64-progress-fill"></div>
+                </div>
+                <p class="progress-text" id="base64-progress-text">0%</p>
+            </div>
+
+            <!-- Result -->
+            <div class="result-container hidden" id="base64-result">
+                <div class="result-header">
+                    <h3>Base64 Result</h3>
+                    <button class="btn btn-copy" id="base64-copy-btn">📋 Copy</button>
+                </div>
+                <textarea class="result-textarea" id="base64-output" readonly placeholder="Base64 output will appear here..."></textarea>
+            </div>
+
+            <!-- Actions -->
+            <div class="module-actions">
+                <button class="btn btn-secondary" id="base64-clear-btn">
+                    Clear
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- S3 Uploader Module -->
+    <section class="converter-module s3-module">
+        <div class="module-header">
+            <div class="module-icon">☁️</div>
+            <h2 class="module-title">S3 Cloud Upload</h2>
+            <p class="module-description">Upload files to cloud storage and get public URLs</p>
+        </div>
+
+        <div class="module-content">
+            <!-- S3 Status -->
+            <div class="s3-status" id="s3-status">
+                <span class="status-indicator" id="s3-indicator">🔴</span>
+                <span class="status-text" id="s3-status-text">Checking S3 connection...</span>
+            </div>
+
+            <!-- File Upload Area -->
+            <div class="upload-area" id="s3-upload-area">
+                <div class="upload-zone" id="s3-drop-zone">
+                    <div class="upload-icon">☁️</div>
+                    <p class="upload-text">
+                        <strong>Drop any file here</strong><br>
+                        or <span class="upload-link">browse to select</span>
+                    </p>
+                    <input type="file" id="s3-file-input" multiple hidden>
+                </div>
+            </div>
+
+            <!-- Upload Options -->
+            <div class="upload-options" id="s3-options">
+                <div class="option-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="s3-public" checked>
+                        <span class="checkmark"></span>
+                        Make files publicly accessible
+                    </label>
+                </div>
+                <div class="option-group">
+                    <label for="s3-expiration">Auto-delete after (days, 0 = never):</label>
+                    <input type="number" id="s3-expiration" value="0" min="0" max="365">
+                </div>
+            </div>
+
+            <!-- Active Uploads -->
+            <div class="upload-list" id="s3-upload-list"></div>
+
+            <!-- Actions -->
+            <div class="module-actions">
+                <button class="btn btn-primary" id="s3-upload-btn" disabled>
+                    Upload to S3
+                </button>
+                <button class="btn btn-secondary" id="s3-clear-btn">
+                    Clear Files
+                </button>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Global Status Bar -->
+<div class="status-bar" id="global-status">
+    <div class="status-content">
+        <span class="status-icon">ℹ️</span>
+        <span class="status-message">Ready</span>
+    </div>
+</div>

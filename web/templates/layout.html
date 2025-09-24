@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="High-performance media converter for WhatsApp - Convert audio, images, and upload files to S3">
+    <title>{{.Title}} - WhatsApp Media Converter</title>
+
+    <!-- Preload critical resources -->
+    <link rel="preload" href="/static/css/style.css" as="style">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/static/css/style.css">
+
+    <!-- Security headers -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:;">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/static/assets/favicon.ico">
+
+    <!-- PWA meta -->
+    <meta name="theme-color" content="#075e54">
+    <meta name="mobile-web-app-capable" content="yes">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="logo">
+                    <span class="logo-icon">🔄</span>
+                    WhatsApp Media Converter
+                </h1>
+                <p class="tagline">High-performance media conversion & cloud upload</p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main">
+            {{.Content}}
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <p class="footer-text">
+                    Powered by Go + Fiber |
+                    <a href="/health" class="footer-link">API Status</a> |
+                    <a href="/stats" class="footer-link">Statistics</a>
+                </p>
+                <p class="footer-version">v1.0.0</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Loading overlay -->
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p class="loading-text">Processing...</p>
+        </div>
+    </div>
+
+    <!-- Toast notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Core JavaScript -->
+    <script src="/static/js/app.js"></script>
+
+    <!-- Module scripts (loaded conditionally) -->
+    {{range .Scripts}}
+    <script src="/static/js/{{.}}"></script>
+    {{end}}
+</body>
+</html>
