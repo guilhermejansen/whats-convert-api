@@ -36,12 +36,13 @@ jobs:
       - name: Run go test
         run: go test -race ./...
 
+      - name: Install golangci-lint
+        run: |
+          go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.61.0
+
       - name: Lint
-        uses: golangci/golangci-lint-action@v4
-        with:
-          version: v1.61.0
-          args: --timeout=5m
-          install-mode: go
+        run: |
+          $(go env GOPATH)/bin/golangci-lint run --timeout=5m
 
       - name: Archive web assets
         if: github.event_name == 'pull_request'
