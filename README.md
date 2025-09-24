@@ -12,18 +12,31 @@ High-performance media conversion service designed for WhatsApp-optimised audio,
 
 ## Table of Contents
 
-- [Features](#features)
-- [Architecture Overview](#architecture-overview)
-- [API Surface](#api-surface)
-- [Configuration](#configuration)
-- [Quick Start](#quick-start)
-- [Development Workflow](#development-workflow)
-- [Testing & Quality Gates](#testing--quality-gates)
-- [CI/CD & Automated Releases](#cicd--automated-releases)
-- [Docker Images](#docker-images)
-- [Troubleshooting](#troubleshooting)
-- [Contributing](#contributing)
-- [License](#license)
+- [WhatsApp Media Converter API](#whatsapp-media-converter-api)
+  - [Table of Contents](#table-of-contents)
+  - [Features](#features)
+  - [Architecture Overview](#architecture-overview)
+  - [API Surface](#api-surface)
+  - [Configuration](#configuration)
+    - [Core Settings](#core-settings)
+    - [S3 Provider Settings](#s3-provider-settings)
+  - [Quick Start](#quick-start)
+    - [Prerequisites](#prerequisites)
+    - [Launch with Docker](#launch-with-docker)
+    - [Local Go Development](#local-go-development)
+    - [Health Check](#health-check)
+  - [Development Workflow](#development-workflow)
+  - [Testing \& Quality Gates](#testing--quality-gates)
+  - [CI/CD \& Automated Releases](#cicd--automated-releases)
+    - [Required Repository Secrets](#required-repository-secrets)
+  - [Docker Images](#docker-images)
+  - [Troubleshooting](#troubleshooting)
+  - [Contributing](#contributing)
+  - [Community Stats](#community-stats)
+    - [⭐ Star History](#-star-history)
+    - [👥 Contributors](#-contributors)
+  - [License](#license)
+  - [Author](#author)
 
 ---
 
@@ -274,6 +287,24 @@ Issue templates for bug reports and feature requests are located in `.github/ISS
 
 ---
 
+## Community Stats
+
+### ⭐ Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=guilhermejansen/whats-convert-api&type=Date)](https://star-history.com/#guilhermejansen/whats-convert-api)
+
+### 👥 Contributors
+
+[![Contributors](https://contrib.rocks/image?repo=guilhermejansen/whats-convert-api)](https://github.com/guilhermejansen/whats-convert-api/graphs/contributors)
+
+---
+
 ## License
 
-Released under the [MIT License](./LICENSE) © 2024 Guilherme Jansen.
+Released under the [MIT License](./LICENSE) © 2025 Guilherme Jansen.
+
+--- 
+
+## Author
+
+Guilherme Jansen [Github](https://github.com/guilhermejansen)
