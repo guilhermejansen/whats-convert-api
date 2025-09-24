@@ -1,4 +1,4 @@
-.PHONY: help build run test clean docker-build docker-run docker-stop benchmark deps lint
+.PHONY: help build run test clean docker-build docker-run docker-stop benchmark deps
 
 # Variables
 APP_NAME = media-converter
@@ -56,12 +56,6 @@ test-coverage: ## Run tests with coverage report
 benchmark: ## Run benchmarks
 	@echo "${GREEN}Running benchmarks...${NC}"
 	go test -bench=. -benchmem ./...
-
-lint: ## Run linter
-	@echo "${GREEN}Running linter...${NC}"
-	@echo "${GREEN}Ensuring golangci-lint $(GOLANGCI_VERSION) is installed...${NC}"
-	GOBIN=$(GOPATH)/bin go install -gcflags=all=-lang=go1.24 github.com/golangci/golangci-lint/cmd/golangci-lint@$(GOLANGCI_VERSION)
-	golangci-lint run
 
 clean: ## Clean build artifacts
 	@echo "${GREEN}Cleaning build artifacts...${NC}"

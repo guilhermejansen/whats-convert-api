@@ -202,7 +202,6 @@ curl http://localhost:8080/health
 | `make run` | Start API locally |
 | `make dev` | Run with hot reload (requires [`air`](https://github.com/cosmtrek/air)) |
 | `make test` | Run unit and integration tests with race detector |
-| `make lint` | Execute `golangci-lint` on the codebase |
 | `make docker-build` | Build container image locally |
 | `make docker-run` | Start docker-compose API stack |
 | `make monitoring-up` | Bring up Prometheus & Grafana profile |
@@ -217,6 +216,7 @@ The Makefile reads the version from the `VERSION` file, which is maintained by t
 2. `make lint` — execute `golangci-lint` to enforce formatting and idiomatic Go.
 3. `go test` is executed on CI for every pull request and push to `main`.
 4. Optional: `make benchmark`, `make load-test`, and `make stress-test` for performance validation.
+5. Static analysis (`golangci-lint`) is no longer bundled in the Makefile because upstream releases are currently incompatible with Go 1.25. Run it via a pre-built binary or container if needed.
 
 ---
 
