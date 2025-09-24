@@ -24,13 +24,13 @@ type S3Service struct {
 
 // S3Stats tracks service statistics
 type S3Stats struct {
-	TotalUploads     int64     `json:"total_uploads"`
-	SuccessfulUploads int64    `json:"successful_uploads"`
-	FailedUploads    int64     `json:"failed_uploads"`
-	TotalBytes       int64     `json:"total_bytes"`
+	TotalUploads      int64         `json:"total_uploads"`
+	SuccessfulUploads int64         `json:"successful_uploads"`
+	FailedUploads     int64         `json:"failed_uploads"`
+	TotalBytes        int64         `json:"total_bytes"`
 	AverageUploadTime time.Duration `json:"average_upload_time"`
-	LastUpload       time.Time `json:"last_upload"`
-	mu               sync.RWMutex
+	LastUpload        time.Time     `json:"last_upload"`
+	mu                sync.RWMutex
 }
 
 // NewS3Service creates a new S3 service

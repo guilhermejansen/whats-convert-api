@@ -23,10 +23,10 @@ type Downloader struct {
 
 // DownloaderStats tracks download performance metrics
 type DownloaderStats struct {
-	TotalDownloads   int64
-	FailedDownloads  int64
-	TotalBytes       int64
-	AvgDownloadTime  time.Duration
+	TotalDownloads  int64
+	FailedDownloads int64
+	TotalBytes      int64
+	AvgDownloadTime time.Duration
 }
 
 // NewDownloader creates an optimized HTTP downloader
@@ -39,18 +39,18 @@ func NewDownloader(bufferPool *pool.BufferPool, maxSize int64) *Downloader {
 		httpClient: &http.Client{
 			Timeout: 30 * time.Second, // Aggressive timeout for downloads
 			Transport: &http.Transport{
-				MaxIdleConns:        100,
-				MaxIdleConnsPerHost: 100,
-				MaxConnsPerHost:     100,
-				IdleConnTimeout:     90 * time.Second,
-				DisableCompression:  true, // We're downloading media files
-				DisableKeepAlives:   false, // Keep connections alive for reuse
-				ForceAttemptHTTP2:   true,
-				TLSHandshakeTimeout: 10 * time.Second,
+				MaxIdleConns:          100,
+				MaxIdleConnsPerHost:   100,
+				MaxConnsPerHost:       100,
+				IdleConnTimeout:       90 * time.Second,
+				DisableCompression:    true,  // We're downloading media files
+				DisableKeepAlives:     false, // Keep connections alive for reuse
+				ForceAttemptHTTP2:     true,
+				TLSHandshakeTimeout:   10 * time.Second,
 				ExpectContinueTimeout: 1 * time.Second,
 				ResponseHeaderTimeout: 10 * time.Second,
-				ReadBufferSize:       32 * 1024, // 32KB read buffer
-				WriteBufferSize:      32 * 1024, // 32KB write buffer
+				ReadBufferSize:        32 * 1024, // 32KB read buffer
+				WriteBufferSize:       32 * 1024, // 32KB write buffer
 			},
 		},
 		bufferPool: bufferPool,

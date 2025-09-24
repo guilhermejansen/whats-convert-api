@@ -15,21 +15,21 @@ import (
 
 // ImageConverter handles image conversion using libvips or FFmpeg
 type ImageConverter struct {
-	workerPool   *pool.WorkerPool
-	bufferPool   *pool.BufferPool
-	downloader   *Downloader
-	useVips      bool // Whether vips is available
-	mu           sync.RWMutex
-	stats        ImageConverterStats
+	workerPool *pool.WorkerPool
+	bufferPool *pool.BufferPool
+	downloader *Downloader
+	useVips    bool // Whether vips is available
+	mu         sync.RWMutex
+	stats      ImageConverterStats
 }
 
 // ImageConverterStats tracks conversion metrics
 type ImageConverterStats struct {
-	TotalConversions   int64
-	FailedConversions  int64
-	AvgConversionTime  time.Duration
-	VipsConversions    int64
-	FFmpegConversions  int64
+	TotalConversions  int64
+	FailedConversions int64
+	AvgConversionTime time.Duration
+	VipsConversions   int64
+	FFmpegConversions int64
 }
 
 // ImageRequest represents an image conversion request
@@ -157,16 +157,16 @@ func (ic *ImageConverter) convertWithVips(ctx context.Context, input []byte, qua
 	// vips is significantly faster than ImageMagick for image processing
 	cmd := exec.CommandContext(ctx, "vips",
 		"jpegsave_buffer",
-		"-",                              // Input from stdin
-		"-",                              // Output to stdout
-		fmt.Sprintf("--Q=%d", quality),  // Quality setting
-		"--optimize-coding",              // Optimize Huffman coding tables
-		"--strip",                        // Strip all metadata
-		"--interlace",                    // Progressive JPEG
-		"--trellis-quant",                // Use trellis quantisation
-		"--overshoot-deringing",          // Reduce ringing artifacts
-		"--optimize-scans",               // Optimize progressive scan layers
-		"--quant-table=3",                // Use high quality quantization table
+		"-",                            // Input from stdin
+		"-",                            // Output to stdout
+		fmt.Sprintf("--Q=%d", quality), // Quality setting
+		"--optimize-coding",            // Optimize Huffman coding tables
+		"--strip",                      // Strip all metadata
+		"--interlace",                  // Progressive JPEG
+		"--trellis-quant",              // Use trellis quantisation
+		"--overshoot-deringing",        // Reduce ringing artifacts
+		"--optimize-scans",             // Optimize progressive scan layers
+		"--quant-table=3",              // Use high quality quantization table
 	)
 
 	cmd.Stdin = bytes.NewReader(input)
@@ -205,14 +205,14 @@ func (ic *ImageConverter) convertWithFFmpeg(ctx context.Context, input []byte, m
 	cmd := exec.CommandContext(ctx, "ffmpeg",
 		"-hide_banner",
 		"-loglevel", "error",
-		"-i", "pipe:0",                            // Input from stdin
-		"-vf", scaleFilter,                        // Scale filter with Lanczos resampling
+		"-i", "pipe:0", // Input from stdin
+		"-vf", scaleFilter, // Scale filter with Lanczos resampling
 		"-q:v", fmt.Sprintf("%d", ffmpegQuality), // Quality setting
-		"-vcodec", "mjpeg",                        // JPEG codec
-		"-pix_fmt", "yuvj444p",                    // High quality pixel format
-		"-f", "image2pipe",                        // Output format
-		"-threads", "0",                           // Use all available threads
-		"pipe:1",                                  // Output to stdout
+		"-vcodec", "mjpeg", // JPEG codec
+		"-pix_fmt", "yuvj444p", // High quality pixel format
+		"-f", "image2pipe", // Output format
+		"-threads", "0", // Use all available threads
+		"pipe:1", // Output to stdout
 	)
 
 	cmd.Stdin = bytes.NewReader(input)

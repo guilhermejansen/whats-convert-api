@@ -8,12 +8,12 @@ import (
 // BufferPool manages reusable byte buffers for memory optimization
 // Pre-allocates buffers to avoid GC pressure under high load
 type BufferPool struct {
-	pool        sync.Pool
-	size        int
-	allocated   int32
-	inUse       int32
-	hits        int64
-	misses      int64
+	pool      sync.Pool
+	size      int
+	allocated int32
+	inUse     int32
+	hits      int64
+	misses    int64
 }
 
 // NewBufferPool creates a new buffer pool with pre-allocated buffers

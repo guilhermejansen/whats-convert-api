@@ -271,13 +271,13 @@ func (p *WorkerPool) QueueSize() int {
 
 // WorkerPoolStats holds statistics about the worker pool
 type WorkerPoolStats struct {
-	MaxWorkers     int
-	ActiveWorkers  int32
-	QueueSize      int
-	TotalTasks     int64
-	FailedTasks    int64
-	SuccessRate    float64
-	AvgExecTimeMs  float64
+	MaxWorkers    int
+	ActiveWorkers int32
+	QueueSize     int
+	TotalTasks    int64
+	FailedTasks   int64
+	SuccessRate   float64
+	AvgExecTimeMs float64
 }
 
 // Stats returns current pool statistics
@@ -292,12 +292,12 @@ func (p *WorkerPool) Stats() WorkerPoolStats {
 	}
 
 	return WorkerPoolStats{
-		MaxWorkers:     p.maxWorkers,
-		ActiveWorkers:  atomic.LoadInt32(&p.activeCount),
-		QueueSize:      p.QueueSize(),
-		TotalTasks:     total,
-		FailedTasks:    failed,
-		SuccessRate:    successRate,
-		AvgExecTimeMs:  float64(avgNs) / 1e6,
+		MaxWorkers:    p.maxWorkers,
+		ActiveWorkers: atomic.LoadInt32(&p.activeCount),
+		QueueSize:     p.QueueSize(),
+		TotalTasks:    total,
+		FailedTasks:   failed,
+		SuccessRate:   successRate,
+		AvgExecTimeMs: float64(avgNs) / 1e6,
 	}
 }

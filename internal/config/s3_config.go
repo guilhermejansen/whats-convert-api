@@ -15,13 +15,13 @@ type S3Configuration struct {
 	Enabled bool `json:"enabled"`
 
 	// Provider configuration
-	Provider     providers.ProviderType `json:"provider"`
-	Endpoint     string                 `json:"endpoint"`
-	PublicEndpoint string               `json:"public_endpoint"`
-	Region       string                 `json:"region"`
-	Bucket       string                 `json:"bucket"`
-	AccessKey    string                 `json:"access_key"`
-	SecretKey    string                 `json:"secret_key"`
+	Provider       providers.ProviderType `json:"provider"`
+	Endpoint       string                 `json:"endpoint"`
+	PublicEndpoint string                 `json:"public_endpoint"`
+	Region         string                 `json:"region"`
+	Bucket         string                 `json:"bucket"`
+	AccessKey      string                 `json:"access_key"`
+	SecretKey      string                 `json:"secret_key"`
 
 	// Connection settings
 	UseSSL    bool `json:"use_ssl"`
@@ -33,16 +33,16 @@ type S3Configuration struct {
 
 	// Performance settings
 	MultipartThreshold   int64         `json:"multipart_threshold"`
-	ChunkSize           int64         `json:"chunk_size"`
+	ChunkSize            int64         `json:"chunk_size"`
 	MaxConcurrentUploads int           `json:"max_concurrent_uploads"`
-	UploadTimeout       time.Duration `json:"upload_timeout"`
-	RetryCount          int           `json:"retry_count"`
+	UploadTimeout        time.Duration `json:"upload_timeout"`
+	RetryCount           int           `json:"retry_count"`
 
 	// Key generation settings
-	KeyPrefix          string `json:"key_prefix"`
-	UseTimestampInKey  bool   `json:"use_timestamp_in_key"`
-	UseUUIDInKey       bool   `json:"use_uuid_in_key"`
-	PreserveFilename   bool   `json:"preserve_filename"`
+	KeyPrefix         string `json:"key_prefix"`
+	UseTimestampInKey bool   `json:"use_timestamp_in_key"`
+	UseUUIDInKey      bool   `json:"use_uuid_in_key"`
+	PreserveFilename  bool   `json:"preserve_filename"`
 
 	// Security settings
 	AllowedContentTypes []string `json:"allowed_content_types"`
@@ -70,8 +70,8 @@ func LoadS3Config() *S3Configuration {
 		PathStyle:             getBool("S3_PATH_STYLE", false),
 		PublicRead:            getBool("S3_PUBLIC_READ", true),
 		DefaultExpirationDays: getInt("S3_EXPIRATION_DAYS", 0),
-		MultipartThreshold:    getInt64("S3_MULTIPART_THRESHOLD", 5*1024*1024),   // 5MB
-		ChunkSize:             getInt64("S3_CHUNK_SIZE", 10*1024*1024),           // 10MB
+		MultipartThreshold:    getInt64("S3_MULTIPART_THRESHOLD", 5*1024*1024), // 5MB
+		ChunkSize:             getInt64("S3_CHUNK_SIZE", 10*1024*1024),         // 10MB
 		MaxConcurrentUploads:  getInt("S3_MAX_CONCURRENT_UPLOADS", 3),
 		UploadTimeout:         getDuration("S3_UPLOAD_TIMEOUT", time.Hour),
 		RetryCount:            getInt("S3_RETRY_COUNT", 3),
@@ -314,4 +314,3 @@ func (c *S3Configuration) GenerateObjectKey(filename string) string {
 
 	return strings.Join(keyParts, "/")
 }
-

@@ -23,9 +23,9 @@ type AudioConverter struct {
 
 // AudioConverterStats tracks conversion metrics
 type AudioConverterStats struct {
-	TotalConversions   int64
-	FailedConversions  int64
-	AvgConversionTime  time.Duration
+	TotalConversions  int64
+	FailedConversions int64
+	AvgConversionTime time.Duration
 }
 
 // AudioRequest represents an audio conversion request
@@ -37,9 +37,9 @@ type AudioRequest struct {
 
 // AudioResponse represents the conversion response
 type AudioResponse struct {
-	Data     string `json:"data"`      // base64 opus audio
-	Duration int    `json:"duration"`  // Duration in seconds
-	Size     int    `json:"size"`      // Size in bytes
+	Data     string `json:"data"`     // base64 opus audio
+	Duration int    `json:"duration"` // Duration in seconds
+	Size     int    `json:"size"`     // Size in bytes
 }
 
 // NewAudioConverter creates a new audio converter
@@ -116,23 +116,23 @@ func (ac *AudioConverter) Convert(ctx context.Context, req *AudioRequest) (*Audi
 func (ac *AudioConverter) convertToOpus(ctx context.Context, input []byte) ([]byte, error) {
 	// FFmpeg command optimized for WhatsApp Opus
 	cmd := exec.CommandContext(ctx, "ffmpeg",
-		"-hide_banner",                   // Hide FFmpeg banner
-		"-loglevel", "error",              // Only show errors
-		"-i", "pipe:0",                    // Input from stdin
-		"-c:a", "libopus",                 // Opus codec
-		"-b:a", "128k",                    // Bitrate 128kbps (WhatsApp standard)
-		"-vbr", "on",                      // Variable bitrate for better quality
-		"-compression_level", "10",        // Maximum compression quality
-		"-application", "voip",            // Optimized for voice (WhatsApp voice notes)
-		"-frame_duration", "20",           // Frame duration in ms
-		"-packet_loss", "10",              // Expected packet loss percentage
-		"-cutoff", "20000",                // Frequency cutoff (20kHz)
-		"-ar", "48000",                    // Sample rate 48kHz (Opus standard)
-		"-ac", "1",                        // Mono (WhatsApp uses mono for voice)
-		"-f", "opus",                      // Output format
-		"-threads", "0",                   // Use all available CPU threads
-		"-preset", "ultrafast",            // Fastest encoding preset
-		"pipe:1",                          // Output to stdout
+		"-hide_banner",       // Hide FFmpeg banner
+		"-loglevel", "error", // Only show errors
+		"-i", "pipe:0", // Input from stdin
+		"-c:a", "libopus", // Opus codec
+		"-b:a", "128k", // Bitrate 128kbps (WhatsApp standard)
+		"-vbr", "on", // Variable bitrate for better quality
+		"-compression_level", "10", // Maximum compression quality
+		"-application", "voip", // Optimized for voice (WhatsApp voice notes)
+		"-frame_duration", "20", // Frame duration in ms
+		"-packet_loss", "10", // Expected packet loss percentage
+		"-cutoff", "20000", // Frequency cutoff (20kHz)
+		"-ar", "48000", // Sample rate 48kHz (Opus standard)
+		"-ac", "1", // Mono (WhatsApp uses mono for voice)
+		"-f", "opus", // Output format
+		"-threads", "0", // Use all available CPU threads
+		"-preset", "ultrafast", // Fastest encoding preset
+		"pipe:1", // Output to stdout
 	)
 
 	// Set up pipes
@@ -172,12 +172,12 @@ func (ac *AudioConverter) convertToOpusAdvanced(ctx context.Context, input []byt
 		"-loglevel", "error",
 		"-i", "pipe:0",
 		"-c:a", "libopus",
-		"-b:a", bitrate,                   // Custom bitrate
+		"-b:a", bitrate, // Custom bitrate
 		"-vbr", "on",
 		"-compression_level", "10",
 		"-application", "voip",
 		"-ar", "48000",
-		"-ac", channels,                   // Custom channel config
+		"-ac", channels, // Custom channel config
 		"-filter:a", "loudnorm=I=-16:LRA=11:TP=-1.5", // Normalize audio levels
 		"-f", "opus",
 		"-threads", "0",

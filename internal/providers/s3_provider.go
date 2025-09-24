@@ -169,11 +169,11 @@ type S3Config struct {
 func DefaultUploadOptions() UploadOptions {
 	return UploadOptions{
 		ContentType:        "application/octet-stream",
-		Metadata:          make(map[string]string),
-		Public:            true,
-		ExpirationDays:    0,
-		StorageClass:      "STANDARD",
-		ChunkSize:         10 * 1024 * 1024, // 10MB
+		Metadata:           make(map[string]string),
+		Public:             true,
+		ExpirationDays:     0,
+		StorageClass:       "STANDARD",
+		ChunkSize:          10 * 1024 * 1024, // 10MB
 		MaxConcurrentParts: 3,
 	}
 }

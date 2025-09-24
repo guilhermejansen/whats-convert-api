@@ -55,9 +55,9 @@ type Config struct {
 	ImageEngine         string
 
 	// Logging configuration
-	LogLevel               string
-	LogFormat              string
-	EnablePerformanceLogs  bool
+	LogLevel              string
+	LogFormat             string
+	EnablePerformanceLogs bool
 
 	// Development settings
 	Debug           bool
@@ -65,21 +65,21 @@ type Config struct {
 	EnableProfiling bool
 
 	// Production settings
-	ProductionMode     bool
-	EnableRequestID    bool
-	EnableCORS         bool
-	TrustedProxies     []string
+	ProductionMode  bool
+	EnableRequestID bool
+	EnableCORS      bool
+	TrustedProxies  []string
 
 	// Monitoring settings
-	EnableHealthCheck    bool
-	EnableStatsEndpoint  bool
-	HealthCheckInterval  time.Duration
+	EnableHealthCheck   bool
+	EnableStatsEndpoint bool
+	HealthCheckInterval time.Duration
 
 	// Security settings
-	EnableAPIAuth     bool
-	APIKey            string
-	EnableRateLimit   bool
-	RateLimit         int
+	EnableAPIAuth   bool
+	APIKey          string
+	EnableRateLimit bool
+	RateLimit       int
 
 	// Docker settings
 	ContainerName string

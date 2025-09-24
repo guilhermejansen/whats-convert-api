@@ -157,70 +157,70 @@ func (f *ProviderFactory) GetProviderDefaults(providerType ProviderType) *S3Conf
 	switch providerType {
 	case ProviderAWS:
 		return &S3Config{
-			Provider:               ProviderAWS,
-			Endpoint:               "https://s3.amazonaws.com",
-			UseSSL:                 true,
-			PathStyle:              false,
-			PublicRead:             false,
-			MultipartThreshold:     5 * 1024 * 1024,  // 5MB
-			ChunkSize:              10 * 1024 * 1024, // 10MB
-			MaxConcurrentUploads:   3,
-			RetryCount:             3,
+			Provider:             ProviderAWS,
+			Endpoint:             "https://s3.amazonaws.com",
+			UseSSL:               true,
+			PathStyle:            false,
+			PublicRead:           false,
+			MultipartThreshold:   5 * 1024 * 1024,  // 5MB
+			ChunkSize:            10 * 1024 * 1024, // 10MB
+			MaxConcurrentUploads: 3,
+			RetryCount:           3,
 		}
 	case ProviderMinIO:
 		return &S3Config{
-			Provider:               ProviderMinIO,
-			UseSSL:                 true,
-			PathStyle:              true,
-			PublicRead:             true,
-			MultipartThreshold:     5 * 1024 * 1024,  // 5MB
-			ChunkSize:              10 * 1024 * 1024, // 10MB
-			MaxConcurrentUploads:   3,
-			RetryCount:             3,
+			Provider:             ProviderMinIO,
+			UseSSL:               true,
+			PathStyle:            true,
+			PublicRead:           true,
+			MultipartThreshold:   5 * 1024 * 1024,  // 5MB
+			ChunkSize:            10 * 1024 * 1024, // 10MB
+			MaxConcurrentUploads: 3,
+			RetryCount:           3,
 		}
 	case ProviderBackblaze:
 		return &S3Config{
-			Provider:               ProviderBackblaze,
-			UseSSL:                 true,
-			PathStyle:              true,
-			PublicRead:             false,
-			MultipartThreshold:     5 * 1024 * 1024,  // 5MB
-			ChunkSize:              10 * 1024 * 1024, // 10MB
-			MaxConcurrentUploads:   3,
-			RetryCount:             3,
+			Provider:             ProviderBackblaze,
+			UseSSL:               true,
+			PathStyle:            true,
+			PublicRead:           false,
+			MultipartThreshold:   5 * 1024 * 1024,  // 5MB
+			ChunkSize:            10 * 1024 * 1024, // 10MB
+			MaxConcurrentUploads: 3,
+			RetryCount:           3,
 		}
 	case ProviderDigitalOcean:
 		return &S3Config{
-			Provider:               ProviderDigitalOcean,
-			UseSSL:                 true,
-			PathStyle:              false,
-			PublicRead:             false,
-			MultipartThreshold:     5 * 1024 * 1024,  // 5MB
-			ChunkSize:              10 * 1024 * 1024, // 10MB
-			MaxConcurrentUploads:   3,
-			RetryCount:             3,
+			Provider:             ProviderDigitalOcean,
+			UseSSL:               true,
+			PathStyle:            false,
+			PublicRead:           false,
+			MultipartThreshold:   5 * 1024 * 1024,  // 5MB
+			ChunkSize:            10 * 1024 * 1024, // 10MB
+			MaxConcurrentUploads: 3,
+			RetryCount:           3,
 		}
 	case ProviderCloudflare:
 		return &S3Config{
-			Provider:               ProviderCloudflare,
-			UseSSL:                 true,
-			PathStyle:              false,
-			PublicRead:             false,
-			MultipartThreshold:     5 * 1024 * 1024,  // 5MB
-			ChunkSize:              10 * 1024 * 1024, // 10MB
-			MaxConcurrentUploads:   3,
-			RetryCount:             3,
+			Provider:             ProviderCloudflare,
+			UseSSL:               true,
+			PathStyle:            false,
+			PublicRead:           false,
+			MultipartThreshold:   5 * 1024 * 1024,  // 5MB
+			ChunkSize:            10 * 1024 * 1024, // 10MB
+			MaxConcurrentUploads: 3,
+			RetryCount:           3,
 		}
 	case ProviderWasabi:
 		return &S3Config{
-			Provider:               ProviderWasabi,
-			UseSSL:                 true,
-			PathStyle:              false,
-			PublicRead:             false,
-			MultipartThreshold:     5 * 1024 * 1024,  // 5MB
-			ChunkSize:              10 * 1024 * 1024, // 10MB
-			MaxConcurrentUploads:   3,
-			RetryCount:             3,
+			Provider:             ProviderWasabi,
+			UseSSL:               true,
+			PathStyle:            false,
+			PublicRead:           false,
+			MultipartThreshold:   5 * 1024 * 1024,  // 5MB
+			ChunkSize:            10 * 1024 * 1024, // 10MB
+			MaxConcurrentUploads: 3,
+			RetryCount:           3,
 		}
 	default:
 		return nil

@@ -5,41 +5,41 @@ import "errors"
 // Provider errors
 var (
 	// Configuration errors
-	ErrInvalidProvider   = errors.New("invalid or unsupported S3 provider")
-	ErrMissingEndpoint   = errors.New("S3 endpoint is required")
-	ErrMissingBucket     = errors.New("S3 bucket name is required")
-	ErrMissingAccessKey  = errors.New("S3 access key is required")
-	ErrMissingSecretKey  = errors.New("S3 secret key is required")
-	ErrMissingRegion     = errors.New("S3 region is required for AWS provider")
+	ErrInvalidProvider  = errors.New("invalid or unsupported S3 provider")
+	ErrMissingEndpoint  = errors.New("S3 endpoint is required")
+	ErrMissingBucket    = errors.New("S3 bucket name is required")
+	ErrMissingAccessKey = errors.New("S3 access key is required")
+	ErrMissingSecretKey = errors.New("S3 secret key is required")
+	ErrMissingRegion    = errors.New("S3 region is required for AWS provider")
 
 	// Upload errors
-	ErrUploadFailed      = errors.New("upload operation failed")
-	ErrMultipartFailed   = errors.New("multipart upload failed")
-	ErrInvalidBase64     = errors.New("invalid base64 data")
-	ErrFileTooLarge      = errors.New("file size exceeds maximum allowed")
+	ErrUploadFailed       = errors.New("upload operation failed")
+	ErrMultipartFailed    = errors.New("multipart upload failed")
+	ErrInvalidBase64      = errors.New("invalid base64 data")
+	ErrFileTooLarge       = errors.New("file size exceeds maximum allowed")
 	ErrInvalidContentType = errors.New("invalid or unsupported content type")
-	ErrEmptyFile         = errors.New("file is empty")
+	ErrEmptyFile          = errors.New("file is empty")
 
 	// Object errors
-	ErrObjectNotFound    = errors.New("object not found")
-	ErrObjectExists      = errors.New("object already exists")
-	ErrDeleteFailed      = errors.New("failed to delete object")
+	ErrObjectNotFound = errors.New("object not found")
+	ErrObjectExists   = errors.New("object already exists")
+	ErrDeleteFailed   = errors.New("failed to delete object")
 
 	// Connection errors
-	ErrConnectionFailed  = errors.New("failed to connect to S3 provider")
+	ErrConnectionFailed     = errors.New("failed to connect to S3 provider")
 	ErrAuthenticationFailed = errors.New("S3 authentication failed")
-	ErrPermissionDenied  = errors.New("insufficient permissions for S3 operation")
-	ErrBucketNotFound    = errors.New("S3 bucket not found")
+	ErrPermissionDenied     = errors.New("insufficient permissions for S3 operation")
+	ErrBucketNotFound       = errors.New("S3 bucket not found")
 
 	// Provider-specific errors
 	ErrProviderNotSupported = errors.New("S3 provider not supported")
 	ErrFeatureNotSupported  = errors.New("feature not supported by this provider")
-	ErrQuotaExceeded       = errors.New("storage quota exceeded")
+	ErrQuotaExceeded        = errors.New("storage quota exceeded")
 
 	// Network/timeout errors
-	ErrTimeout           = errors.New("operation timed out")
-	ErrNetworkError      = errors.New("network error during S3 operation")
-	ErrRetryExhausted    = errors.New("maximum retry attempts exceeded")
+	ErrTimeout        = errors.New("operation timed out")
+	ErrNetworkError   = errors.New("network error during S3 operation")
+	ErrRetryExhausted = errors.New("maximum retry attempts exceeded")
 )
 
 // S3Error wraps provider-specific errors with additional context
