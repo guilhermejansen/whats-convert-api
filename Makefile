@@ -60,7 +60,7 @@ benchmark: ## Run benchmarks
 lint: ## Run linter
 	@echo "${GREEN}Running linter...${NC}"
 	@echo "${GREEN}Ensuring golangci-lint $(GOLANGCI_VERSION) is installed...${NC}"
-	GOFLAGS='' GOBIN=$(GOPATH)/bin go install github.com/golangci/golangci-lint/cmd/golangci-lint@$(GOLANGCI_VERSION)
+	GOBIN=$(GOPATH)/bin go install -gcflags=all=-lang=go1.24 github.com/golangci/golangci-lint/cmd/golangci-lint@$(GOLANGCI_VERSION)
 	golangci-lint run
 
 clean: ## Clean build artifacts
