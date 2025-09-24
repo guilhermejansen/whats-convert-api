@@ -16,6 +16,9 @@ jobs:
     env:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+      LC_ALL: C
+      LANG: C
+      TZ: UTC
 
     steps:
       - name: Checkout
