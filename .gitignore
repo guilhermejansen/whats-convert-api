@@ -1,0 +1,75 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Binary output
+media-converter
+whats-convert-api
+/api
+/main
+
+# Local caches and agent configs
+.gocache/
+.claude/
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+coverage.html
+coverage.out
+
+# Dependency directories
+vendor/
+
+# Go workspace file
+go.work
+
+# IDE directories
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Keep environment templates
+!.env.example
+!.env.production
+
+# Docker volumes
+data/
+logs/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Test results
+*.log
+gnuplot.tsv
+percentiles.csv
+*_results.bin
+*_plot.html
+
+# Build artifacts
+dist/
+build/
+
+# Performance test outputs
+benchmarks/
+load-tests/
