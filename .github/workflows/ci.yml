@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          check-latest: true
+
+      - name: Verify gofmt
+        run: |
+          CHANGED=$(gofmt -l $(find . -name '*.go' -not -path './vendor/*'))
+          if [ -n "$CHANGED" ]; then
+            echo "The following files are not gofmt'd:" >&2
+            echo "$CHANGED" >&2
+            exit 1
+          fi
+
+      - name: Run go test
+        run: go test -race ./...
+
+      - name: Lint
+        uses: golangci/golangci-lint-action@v4
+        with:
+          version: latest
+          args: --timeout=5m
+
+      - name: Archive web assets
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-static
+          path: web/
+          if-no-files-found: ignore
