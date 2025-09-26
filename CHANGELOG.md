@@ -1,3 +1,8 @@
+## <small>1.2.4 (2025-09-26)</small>
+
+* Merge branch 'main' of github.com:guilhermejansen/whats-convert-api ([d4dfa482a58624a55b03a8c4ffcaf2d6dc233e74](https://github.com/guilhermejansen/whats-convert-api/commit/d4dfa482a58624a55b03a8c4ffcaf2d6dc233e74))
+* fix: atualizar Dockerfile e stack-swarm.yml ([e00a7603e99a3eca3fe693b56e558ce4691c4a9a](https://github.com/guilhermejansen/whats-convert-api/commit/e00a7603e99a3eca3fe693b56e558ce4691c4a9a))
+
 ## <small>1.2.3 (2025-09-26)</small>
 
 * fix: comentar verificação de saúde no Dockerfile ([b19b4251f4035a7cf39990c7674d5a8117a56804](https://github.com/guilhermejansen/whats-convert-api/commit/b19b4251f4035a7cf39990c7674d5a8117a56804))
