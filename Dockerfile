@@ -13,8 +13,6 @@ WORKDIR /build
 
 # Copy go mod files first for better caching
 COPY go.mod go.sum ./
-COPY docs/ ./docs/
-COPY web/ ./web/
 
 # Download dependencies
 RUN go mod download
@@ -52,6 +50,8 @@ WORKDIR /app
 
 # Copy binary from builder
 COPY --from=builder /build/media-converter .
+COPY --from=builder /build/docs/postman_collection.json ./docs/postman_collection.json
+COPY --from=builder /build/web/ ./web/
 
 # Create directories for temporary files
 RUN mkdir -p /tmp /dev/shm && \
