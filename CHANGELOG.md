@@ -1,3 +1,7 @@
+## 1.1.0 (2025-09-26)
+
+* feat: adicionar suporte ao Swagger para documentação da API ([50482e8acf921f41436059728ba525a6fbd5c275](https://github.com/guilhermejansen/whats-convert-api/commit/50482e8acf921f41436059728ba525a6fbd5c275))
+
 ## 1.0.0 (2025-09-24)
 
 * refactor: convert release config to JS for timestamp fix ([1b30d26a9a31dc40d7654500031b808d1b9c8d6d](https://github.com/guilhermejansen/whats-convert-api/commit/1b30d26a9a31dc40d7654500031b808d1b9c8d6d))
