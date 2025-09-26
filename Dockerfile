@@ -13,6 +13,8 @@ WORKDIR /build
 
 # Copy go mod files first for better caching
 COPY go.mod go.sum ./
+COPY docs/ ./docs/
+COPY web/ ./web/
 
 # Download dependencies
 RUN go mod download

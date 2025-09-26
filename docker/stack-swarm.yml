@@ -138,7 +138,7 @@ services:
       - S3_USE_UUID_IN_KEY=true
       # Preserve original filename inside generated key
       - S3_PRESERVE_FILENAME=true
-      # Allowed MIME types for S3 uploads
+      # Allowed MIME types for S3 uploads (image/*, audio/*, video/*, application/pdf)
       - S3_ALLOWED_CONTENT_TYPES=
       # Maximum S3 upload payload size (0 = unlimited)
       - S3_MAX_FILE_SIZE=0
