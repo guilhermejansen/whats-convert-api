@@ -159,12 +159,13 @@ services:
           - node.role == manager
       labels:
         - traefik.enable=true
-        - traefik.http.routers.whats-convert-api.rule=Host('api.convert.com.br')
+        - traefik.http.routers.whats-convert-api.rule=Host(`api.convert.com.br`)
         - traefik.http.routers.whats-convert-api.entrypoints=websecure
-        - traefik.http.routers.whats-convert-api.tls=true
+        - traefik.http.routers.whats-convert-api.priority=1
+        - traefik.http.routers.setupautomatizado-registry.tls.certresolver=letsencryptresolver
         - traefik.http.routers.whats-convert-api.service=whats-convert-api
         - traefik.http.services.whats-convert-api.loadbalancer.server.port=8080
-
+        
 networks:
   network_public:
     name: network_public

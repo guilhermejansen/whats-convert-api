@@ -40,6 +40,7 @@ RUN apk add --no-cache \
     vips-tools \
     ca-certificates \
     tini \
+    curl \
     && rm -rf /var/cache/apk/*
 
 # Create non-root user
@@ -52,6 +53,9 @@ WORKDIR /app
 COPY --from=builder /build/media-converter .
 COPY --from=builder /build/docs/postman_collection.json ./docs/postman_collection.json
 COPY --from=builder /build/web/ ./web/
+
+# Provide an empty .env so godotenv does not warn in container
+RUN touch .env && chown appuser:appuser .env
 
 # Create directories for temporary files
 RUN mkdir -p /tmp /dev/shm && \
@@ -78,9 +82,9 @@ USER appuser
 # Expose port
 EXPOSE 8080
 
-# # Health check
-# HEALTHCHECK --interval=10s --timeout=3s --start-period=5s --retries=3 \
-#     CMD wget --no-verbose --tries=1 --spider http://localhost:8080/api/health || exit 1
+# Health check probing the /health endpoint
+HEALTHCHECK --interval=10s --timeout=5s --start-period=10s --retries=3 \
+    CMD curl --fail --silent http://127.0.0.1:${PORT:-8080}/health || exit 1
 
 # Use tini for proper signal handling
 LABEL org.opencontainers.image.title="WhatsApp Media Converter API" \
