@@ -78,9 +78,9 @@ USER appuser
 # Expose port
 EXPOSE 8080
 
-# Health check
-HEALTHCHECK --interval=10s --timeout=3s --start-period=5s --retries=3 \
-    CMD wget --no-verbose --tries=1 --spider http://localhost:8080/health || exit 1
+# # Health check
+# HEALTHCHECK --interval=10s --timeout=3s --start-period=5s --retries=3 \
+#     CMD wget --no-verbose --tries=1 --spider http://localhost:8080/api/health || exit 1
 
 # Use tini for proper signal handling
 LABEL org.opencontainers.image.title="WhatsApp Media Converter API" \
