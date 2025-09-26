@@ -8,14 +8,18 @@ import (
 	"os/signal"
 	"runtime"
 	"runtime/debug"
+	"strings"
 	"syscall"
 	"time"
 
 	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v3/middleware/adaptor"
 	"github.com/gofiber/fiber/v3/middleware/cors"
 	"github.com/gofiber/fiber/v3/middleware/logger"
 	"github.com/gofiber/fiber/v3/middleware/recover"
 	"github.com/gofiber/fiber/v3/middleware/requestid"
+	swaggerFiles "github.com/swaggo/files"
+	httpSwagger "github.com/swaggo/http-swagger"
 
 	"whats-convert-api/internal/config"
 	"whats-convert-api/internal/handlers"
@@ -37,6 +41,7 @@ type Server struct {
 	uploadManager  *services.UploadManager
 	s3Handler      *handlers.S3Handler
 	webHandler     *handlers.WebHandler
+	metaHandler    *handlers.MetaHandler
 }
 
 // New creates a new server instance
@@ -101,6 +106,9 @@ func (s *Server) Initialize() error {
 		return fmt.Errorf("failed to initialize web handler: %w", err)
 	}
 	s.webHandler = webHandler
+
+	// Initialize metadata handler with API version
+	s.metaHandler = handlers.NewMetaHandler(readAPIVersion(), s.s3Handler != nil)
 
 	// Initialize Fiber app with v3 config
 	s.app = fiber.New(fiber.Config{
@@ -174,39 +182,9 @@ func (s *Server) setupRoutes() {
 	// Web interface routes
 	s.webHandler.RegisterWebRoutes(s.app)
 
-	// API information endpoint (moved to /api)
-	// @Summary API Information
-	// @Description Returns basic information about the API and available endpoints
-	// @Tags General
-	// @Produce json
-	// @Success 200 {object} models.APIInfo "API information and endpoints"
-	// @Router /api [get]
-	s.app.Get("/api", func(c fiber.Ctx) error {
-		endpoints := fiber.Map{
-			"audio":       "/convert/audio",
-			"image":       "/convert/image",
-			"batch_audio": "/convert/batch/audio",
-			"batch_image": "/convert/batch/image",
-			"health":      "/health",
-			"stats":       "/stats",
-		}
-
-		// Add S3 endpoints if enabled
-		if s.s3Handler != nil {
-			endpoints["s3_upload"] = "/upload/s3"
-			endpoints["s3_base64"] = "/upload/s3/base64"
-			endpoints["s3_status"] = "/upload/s3/status/{id}"
-			endpoints["s3_list"] = "/upload/s3/list"
-			endpoints["s3_health"] = "/upload/s3/health"
-			endpoints["s3_stats"] = "/upload/s3/stats"
-		}
-
-		return c.JSON(fiber.Map{
-			"name":      "WhatsApp Media Converter API",
-			"version":   "1.0.0",
-			"endpoints": endpoints,
-		})
-	})
+	if s.metaHandler != nil {
+		s.app.Get("/api", s.metaHandler.APIInfo)
+	}
 
 	// Health check
 	s.app.Get("/health", s.handler.Health)
@@ -225,6 +203,10 @@ func (s *Server) setupRoutes() {
 		s.s3Handler.RegisterS3Routes(s.app)
 	}
 
+	if s.config.EnableSwagger {
+		s.registerSwaggerRoutes()
+	}
+
 	// 404 handler
 	s.app.Use(func(c fiber.Ctx) error {
 		return c.Status(404).JSON(fiber.Map{
@@ -232,6 +214,47 @@ func (s *Server) setupRoutes() {
 			"path":  c.Path(),
 		})
 	})
+}
+
+func (s *Server) registerSwaggerRoutes() {
+	swaggerFiles.Handler.Prefix = "/swagger"
+	s.app.Get("/swagger", func(c fiber.Ctx) error {
+		return c.Redirect().Status(fiber.StatusTemporaryRedirect).To("/swagger/index.html")
+	})
+	s.app.Get("/swagger/postman.json", func(c fiber.Ctx) error {
+		return c.SendFile("docs/postman_collection.json")
+	})
+	s.app.Get("/swagger/*", adaptor.HTTPHandler(httpSwagger.Handler(
+		httpSwagger.InstanceName("swagger"),
+		httpSwagger.DeepLinking(true),
+		httpSwagger.AfterScript(`(function(){
+		var attempts=0,maxAttempts=50,styleInjected=false;
+		function injectStyle(){
+			if(styleInjected){return;}
+			var style=document.createElement('style');
+			style.textContent='.postman-download-btn{margin-left:12px;padding:8px 14px;border-radius:4px;background:#ef5b25;color:#fff;font-weight:600;text-decoration:none;transition:background .2s;} .postman-download-btn:hover{background:#d64f1f;}';
+			document.head.appendChild(style);
+			styleInjected=true;
+		}
+		function addPostmanButton(){
+			attempts++;
+			var container=document.querySelector('.swagger-ui .topbar .download-url-wrapper');
+			if(!container){
+				if(attempts<maxAttempts){setTimeout(addPostmanButton,200);}return;
+			}
+			if(container.querySelector('.postman-download-btn')){return;}
+			injectStyle();
+			var btn=document.createElement('a');
+			btn.className='postman-download-btn';
+			btn.href='/swagger/postman.json';
+			btn.download='whats-convert-api.postman_collection.json';
+			btn.textContent='Download Postman Collection';
+			container.appendChild(btn);
+		}
+		if(document.readyState==='complete'){addPostmanButton();}
+		else{window.addEventListener('load',addPostmanButton);} 
+	})();`),
+	)))
 }
 
 // Start starts the server
@@ -298,9 +321,30 @@ func (s *Server) printStartupInfo() {
 	log.Printf("Go Version:     %s", runtime.Version())
 	log.Printf("GOGC:           %d", s.config.GOGC)
 	log.Printf("Memory Limit:   %s", s.config.GoMemLimit)
+	log.Printf("Swagger:        %t", s.config.EnableSwagger)
 	log.Println("========================================")
 	log.Printf("Ready to handle 1000+ requests/second!")
 	log.Println("========================================")
+	log.Printf("Author:         Guilherme Jansen")
+	log.Printf("Email:          suporte@setupautomatizado.com.br")
+	log.Println("========================================")
+	log.Printf("GitHub:         https://github.com/guilhermejansen")
+	log.Println("========================================")
+}
+
+func readAPIVersion() string {
+	const fallbackVersion = "1.0.0"
+	data, err := os.ReadFile("VERSION")
+	if err != nil {
+		return fallbackVersion
+	}
+
+	version := strings.TrimSpace(string(data))
+	if version == "" {
+		return fallbackVersion
+	}
+
+	return version
 }
 
 // GetStats returns server statistics

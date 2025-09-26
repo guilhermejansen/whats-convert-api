@@ -30,16 +30,16 @@ type AudioConverterStats struct {
 
 // AudioRequest represents an audio conversion request
 type AudioRequest struct {
-	Data      string `json:"data"`       // base64 or URL
-	IsURL     bool   `json:"is_url"`     // true if data is URL
-	InputType string `json:"input_type"` // Optional: mp3, wav, m4a, etc.
+	Data      string `json:"data" example:"data:audio/aac;base64,T2dnUwACAAAAAAAAAAB"` // base64 or URL
+	IsURL     bool   `json:"is_url" example:"false"`                                   // true if data is URL
+	InputType string `json:"input_type" example:"mp3"`                                 // Optional: mp3, wav, m4a, etc.
 }
 
 // AudioResponse represents the conversion response
 type AudioResponse struct {
-	Data     string `json:"data"`     // base64 opus audio
-	Duration int    `json:"duration"` // Duration in seconds
-	Size     int    `json:"size"`     // Size in bytes
+	Data     string `json:"data" example:"data:audio/ogg;codecs=opus;base64,T2dnUwACAAAA"` // base64 opus audio
+	Duration int    `json:"duration" example:"8"`                                          // Duration in seconds
+	Size     int    `json:"size" example:"42144"`                                          // Size in bytes
 }
 
 // NewAudioConverter creates a new audio converter

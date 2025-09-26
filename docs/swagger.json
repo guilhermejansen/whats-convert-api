@@ -1,0 +1,1225 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "High-performance media conversion API delivering WhatsApp-ready audio and images.\n\n**Author:** Guilherme Jansen · [GitHub](https://github.com/guilhermejansen)\n**Contato direto:** suporte@setupautomatizado.com.br\n**Coleção Postman pronta:** [Download](./swagger/postman.json)\n\nUse os exemplos documentados em cada endpoint para testar rapidamente conversões de áudio, imagem e operações S3.",
+        "title": "WhatsApp Media Converter API",
+        "contact": {
+            "name": "Guilherme Jansen",
+            "url": "https://github.com/guilhermejansen",
+            "email": "suporte@setupautomatizado.com.br"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        },
+        "version": "1.0.0"
+    },
+    "basePath": "/",
+    "paths": {
+        "/api": {
+            "get": {
+                "description": "Provides API version and available endpoint catalogue.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "General"
+                ],
+                "summary": "API metadata",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_models.APIInfoResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/convert/audio": {
+            "post": {
+                "description": "Accepts base64 payloads or multipart uploads and returns an optimized Opus data URI.",
+                "consumes": [
+                    "application/json",
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Conversion"
+                ],
+                "summary": "Convert audio to WhatsApp-compatible Opus format",
+                "parameters": [
+                    {
+                        "description": "Audio conversion request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_services.AudioRequest"
+                        }
+                    },
+                    {
+                        "type": "file",
+                        "description": "Audio file when using multipart",
+                        "name": "file",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_services.AudioResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_models.ErrorResponse"
+                        }
+                    },
+                    "408": {
+                        "description": "Request Timeout",
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_models.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_models.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/convert/batch/audio": {
+            "post": {
+                "description": "Processes up to 10 audio conversion jobs concurrently.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Conversion"
+                ],
+                "summary": "Convert a batch of audio payloads",
+                "parameters": [
+                    {
+                        "description": "Batch audio conversion request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/whats-convert-api_internal_services.AudioRequest"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_models.BatchAudioResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_models.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_models.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/convert/batch/image": {
+            "post": {
+                "description": "Processes up to 10 image conversion jobs concurrently.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Conversion"
+                ],
+                "summary": "Convert a batch of image payloads",
+                "parameters": [
+                    {
+                        "description": "Batch image conversion request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/whats-convert-api_internal_services.ImageRequest"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_models.BatchImageResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_models.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_models.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/convert/image": {
+            "post": {
+                "description": "Accepts base64 payloads or multipart uploads and returns a compressed JPEG data URI.",
+                "consumes": [
+                    "application/json",
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Conversion"
+                ],
+                "summary": "Convert image to WhatsApp-optimized JPEG",
+                "parameters": [
+                    {
+                        "description": "Image conversion request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_services.ImageRequest"
+                        }
+                    },
+                    {
+                        "type": "file",
+                        "description": "Image file when using multipart",
+                        "name": "file",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_services.ImageResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_models.ErrorResponse"
+                        }
+                    },
+                    "408": {
+                        "description": "Request Timeout",
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_models.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_models.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/health": {
+            "get": {
+                "description": "Returns aggregated success metrics for audio and image converters.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Monitoring"
+                ],
+                "summary": "Service health snapshot",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_models.HealthResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/stats": {
+            "get": {
+                "description": "Exposes raw converter counters for observability integrations.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Monitoring"
+                ],
+                "summary": "Converter statistics",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_models.StatsResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/upload/s3": {
+            "post": {
+                "description": "Accepts large media as multipart form-data and dispatches asynchronous upload jobs.",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "S3"
+                ],
+                "summary": "Start multipart upload to S3-compatible storage",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "Binary file to upload",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "JSON encoded upload options",
+                        "name": "options",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "Accepted",
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_models.S3UploadResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_models.S3UploadResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_models.S3UploadResponse"
+                        }
+                    },
+                    "503": {
+                        "description": "Service Unavailable",
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_models.S3UploadResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/upload/s3/base64": {
+            "post": {
+                "description": "Accepts pre-encoded data URIs and dispatches asynchronous upload jobs.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "S3"
+                ],
+                "summary": "Start base64 upload to S3-compatible storage",
+                "parameters": [
+                    {
+                        "description": "Base64 upload request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_models.S3Base64UploadRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "Accepted",
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_models.S3UploadResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_models.S3UploadResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_models.S3UploadResponse"
+                        }
+                    },
+                    "503": {
+                        "description": "Service Unavailable",
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_models.S3UploadResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/upload/s3/health": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "S3"
+                ],
+                "summary": "S3 subsystem health",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_models.S3HealthResponse"
+                        }
+                    },
+                    "503": {
+                        "description": "Service Unavailable",
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_models.S3HealthResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/upload/s3/list": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "S3"
+                ],
+                "summary": "List recent upload jobs",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Filter by upload status (pending|uploading|completed|failed|cancelled)",
+                        "name": "status",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 50,
+                        "description": "Maximum number of results",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_models.S3UploadListResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/upload/s3/object/{key}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "S3"
+                ],
+                "summary": "Retrieve object metadata",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Object key",
+                        "name": "key",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_providers.ObjectInfo"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_models.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_models.ErrorResponse"
+                        }
+                    },
+                    "503": {
+                        "description": "Service Unavailable",
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_models.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "S3"
+                ],
+                "summary": "Delete object from storage",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Object key",
+                        "name": "key",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_models.MessageResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_models.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_models.ErrorResponse"
+                        }
+                    },
+                    "503": {
+                        "description": "Service Unavailable",
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_models.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/upload/s3/stats": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "S3"
+                ],
+                "summary": "S3 provider and upload manager metrics",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_models.S3StatsResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/upload/s3/status/{id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "S3"
+                ],
+                "summary": "Retrieve asynchronous upload status",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Upload identifier",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_models.S3UploadStatusResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_models.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_models.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "S3"
+                ],
+                "summary": "Cancel an in-flight upload job",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Upload identifier",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_models.MessageResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/whats-convert-api_internal_models.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "whats-convert-api_internal_models.APIInfoResponse": {
+            "type": "object",
+            "properties": {
+                "endpoints": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "name": {
+                    "type": "string",
+                    "example": "WhatsApp Media Converter API"
+                },
+                "version": {
+                    "type": "string",
+                    "example": "1.0.0"
+                }
+            }
+        },
+        "whats-convert-api_internal_models.AudioHealthMetrics": {
+            "type": "object",
+            "properties": {
+                "avg_conversion_time": {
+                    "type": "integer",
+                    "example": 135
+                },
+                "failed_conversions": {
+                    "type": "integer",
+                    "example": 12
+                },
+                "success_rate": {
+                    "type": "string",
+                    "example": "99.06%"
+                },
+                "total_conversions": {
+                    "type": "integer",
+                    "example": 1280
+                }
+            }
+        },
+        "whats-convert-api_internal_models.BatchAudioResponse": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer",
+                    "example": 2
+                },
+                "results": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/whats-convert-api_internal_services.AudioResponse"
+                    }
+                }
+            }
+        },
+        "whats-convert-api_internal_models.BatchImageResponse": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer",
+                    "example": 2
+                },
+                "results": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/whats-convert-api_internal_services.ImageResponse"
+                    }
+                }
+            }
+        },
+        "whats-convert-api_internal_models.ConverterStats": {
+            "type": "object",
+            "properties": {
+                "avg_conversion_time_ms": {
+                    "type": "integer",
+                    "example": 135
+                },
+                "failed_conversions": {
+                    "type": "integer",
+                    "example": 12
+                },
+                "total_conversions": {
+                    "type": "integer",
+                    "example": 1280
+                }
+            }
+        },
+        "whats-convert-api_internal_models.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "details": {
+                    "type": "string",
+                    "example": "Missing 'data' field"
+                },
+                "error": {
+                    "type": "string",
+                    "example": "Invalid request"
+                }
+            }
+        },
+        "whats-convert-api_internal_models.HealthResponse": {
+            "type": "object",
+            "properties": {
+                "audio": {
+                    "$ref": "#/definitions/whats-convert-api_internal_models.AudioHealthMetrics"
+                },
+                "image": {
+                    "$ref": "#/definitions/whats-convert-api_internal_models.ImageHealthMetrics"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "healthy"
+                },
+                "timestamp": {
+                    "type": "integer",
+                    "example": 1700000000
+                }
+            }
+        },
+        "whats-convert-api_internal_models.ImageConverterStats": {
+            "type": "object",
+            "properties": {
+                "avg_conversion_time_ms": {
+                    "type": "integer",
+                    "example": 110
+                },
+                "failed_conversions": {
+                    "type": "integer",
+                    "example": 8
+                },
+                "ffmpeg_conversions": {
+                    "type": "integer",
+                    "example": 360
+                },
+                "total_conversions": {
+                    "type": "integer",
+                    "example": 980
+                },
+                "vips_conversions": {
+                    "type": "integer",
+                    "example": 620
+                }
+            }
+        },
+        "whats-convert-api_internal_models.ImageHealthMetrics": {
+            "type": "object",
+            "properties": {
+                "avg_conversion_time": {
+                    "type": "integer",
+                    "example": 110
+                },
+                "failed_conversions": {
+                    "type": "integer",
+                    "example": 8
+                },
+                "success_rate": {
+                    "type": "string",
+                    "example": "99.18%"
+                },
+                "total_conversions": {
+                    "type": "integer",
+                    "example": 980
+                },
+                "vips_available": {
+                    "type": "boolean",
+                    "example": true
+                }
+            }
+        },
+        "whats-convert-api_internal_models.MessageResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "Operation completed successfully"
+                },
+                "success": {
+                    "type": "boolean",
+                    "example": true
+                }
+            }
+        },
+        "whats-convert-api_internal_models.S3Base64UploadRequest": {
+            "type": "object",
+            "properties": {
+                "content_type": {
+                    "type": "string",
+                    "example": "audio/ogg"
+                },
+                "data": {
+                    "type": "string",
+                    "example": "data:audio/ogg;base64,T2dnUwACAAAAAAAAAAB"
+                },
+                "expires_days": {
+                    "type": "integer",
+                    "example": 3
+                },
+                "filename": {
+                    "type": "string",
+                    "example": "voice-note.opus"
+                },
+                "key": {
+                    "type": "string",
+                    "example": "uploads/audio/voice-note.opus"
+                },
+                "metadata": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "public": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "storage_class": {
+                    "type": "string",
+                    "example": "STANDARD"
+                }
+            }
+        },
+        "whats-convert-api_internal_models.S3HealthResponse": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "example": "failed to connect to bucket"
+                },
+                "healthy": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "message": {
+                    "type": "string",
+                    "example": "S3 service is operational"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "healthy"
+                }
+            }
+        },
+        "whats-convert-api_internal_models.S3ServiceStats": {
+            "type": "object",
+            "properties": {
+                "avg_upload_time": {
+                    "type": "string",
+                    "example": "1.2s"
+                },
+                "enabled": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "failed_uploads": {
+                    "type": "integer",
+                    "example": 4
+                },
+                "last_upload": {
+                    "type": "string",
+                    "example": "2024-03-31T12:00:00Z"
+                },
+                "success_rate": {
+                    "type": "number",
+                    "example": 98.33
+                },
+                "successful_uploads": {
+                    "type": "integer",
+                    "example": 236
+                },
+                "total_bytes": {
+                    "type": "integer",
+                    "example": 73400320
+                },
+                "total_uploads": {
+                    "type": "integer",
+                    "example": 240
+                }
+            }
+        },
+        "whats-convert-api_internal_models.S3StatsResponse": {
+            "type": "object",
+            "properties": {
+                "s3_service": {
+                    "$ref": "#/definitions/whats-convert-api_internal_models.S3ServiceStats"
+                },
+                "upload_manager": {
+                    "$ref": "#/definitions/whats-convert-api_internal_models.S3UploadManagerStats"
+                }
+            }
+        },
+        "whats-convert-api_internal_models.S3UploadListResponse": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "uploads": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/whats-convert-api_internal_models.S3UploadStatusResponse"
+                    }
+                }
+            }
+        },
+        "whats-convert-api_internal_models.S3UploadManagerStats": {
+            "type": "object",
+            "properties": {
+                "capacity_used": {
+                    "type": "number",
+                    "example": 33.33
+                },
+                "current_uploads": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "max_concurrent": {
+                    "type": "integer",
+                    "example": 3
+                },
+                "status_counts": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "integer"
+                    }
+                },
+                "total_uploads": {
+                    "type": "integer",
+                    "example": 5
+                }
+            }
+        },
+        "whats-convert-api_internal_models.S3UploadResponse": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "example": "Failed to start upload"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Upload started successfully"
+                },
+                "result": {
+                    "$ref": "#/definitions/whats-convert-api_internal_models.S3UploadResult"
+                },
+                "success": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "upload_id": {
+                    "type": "string",
+                    "example": "3f99d60f-bd8d-49e6-9ecf-2fbc9e4adffe"
+                }
+            }
+        },
+        "whats-convert-api_internal_models.S3UploadResult": {
+            "type": "object",
+            "properties": {
+                "etag": {
+                    "type": "string",
+                    "example": "\"9b2cf535f27731c974343645a3985328\""
+                },
+                "expires_at": {
+                    "type": "string",
+                    "example": "2024-04-01T12:00:00Z"
+                },
+                "key": {
+                    "type": "string",
+                    "example": "uploads/audio/sample.opus"
+                },
+                "processing_time_ms": {
+                    "type": "integer",
+                    "example": 1200
+                },
+                "provider": {
+                    "type": "string",
+                    "example": "minio"
+                },
+                "size": {
+                    "type": "integer",
+                    "example": 7340032
+                },
+                "upload_id": {
+                    "type": "string",
+                    "example": "44c62b0d-7d55-4c74-9f65-8c7ab1f06642"
+                },
+                "url": {
+                    "type": "string",
+                    "example": "https://cdn.example.com/uploads/audio/sample.opus"
+                },
+                "version_id": {
+                    "type": "string",
+                    "example": "3/L4kqtJlcpXroDTDmJ+rmSpXd3dIbrHY"
+                }
+            }
+        },
+        "whats-convert-api_internal_models.S3UploadStatusResponse": {
+            "type": "object",
+            "properties": {
+                "bytes_transferred": {
+                    "type": "integer",
+                    "example": 1048576
+                },
+                "end_time": {
+                    "type": "string",
+                    "example": "2024-03-31T12:00:10Z"
+                },
+                "error": {
+                    "type": "string",
+                    "example": "connection reset by peer"
+                },
+                "progress": {
+                    "type": "number",
+                    "example": 42.5
+                },
+                "result": {
+                    "$ref": "#/definitions/whats-convert-api_internal_models.S3UploadResult"
+                },
+                "start_time": {
+                    "type": "string",
+                    "example": "2024-03-31T12:00:00Z"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "uploading"
+                },
+                "total_bytes": {
+                    "type": "integer",
+                    "example": 5242880
+                },
+                "upload_id": {
+                    "type": "string",
+                    "example": "3f99d60f-bd8d-49e6-9ecf-2fbc9e4adffe"
+                }
+            }
+        },
+        "whats-convert-api_internal_models.StatsResponse": {
+            "type": "object",
+            "properties": {
+                "audio": {
+                    "$ref": "#/definitions/whats-convert-api_internal_models.ConverterStats"
+                },
+                "image": {
+                    "$ref": "#/definitions/whats-convert-api_internal_models.ImageConverterStats"
+                },
+                "timestamp": {
+                    "type": "integer",
+                    "example": 1700000000
+                }
+            }
+        },
+        "whats-convert-api_internal_providers.ObjectInfo": {
+            "type": "object",
+            "properties": {
+                "content_type": {
+                    "type": "string"
+                },
+                "etag": {
+                    "type": "string"
+                },
+                "key": {
+                    "type": "string"
+                },
+                "last_modified": {
+                    "type": "string"
+                },
+                "metadata": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "size": {
+                    "type": "integer"
+                },
+                "storage_class": {
+                    "type": "string"
+                },
+                "version_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "whats-convert-api_internal_services.AudioRequest": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "description": "base64 or URL",
+                    "type": "string",
+                    "example": "data:audio/aac;base64,T2dnUwACAAAAAAAAAAB"
+                },
+                "input_type": {
+                    "description": "Optional: mp3, wav, m4a, etc.",
+                    "type": "string",
+                    "example": "mp3"
+                },
+                "is_url": {
+                    "description": "true if data is URL",
+                    "type": "boolean",
+                    "example": false
+                }
+            }
+        },
+        "whats-convert-api_internal_services.AudioResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "description": "base64 opus audio",
+                    "type": "string",
+                    "example": "data:audio/ogg;codecs=opus;base64,T2dnUwACAAAA"
+                },
+                "duration": {
+                    "description": "Duration in seconds",
+                    "type": "integer",
+                    "example": 8
+                },
+                "size": {
+                    "description": "Size in bytes",
+                    "type": "integer",
+                    "example": 42144
+                }
+            }
+        },
+        "whats-convert-api_internal_services.ImageRequest": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "description": "base64 or URL",
+                    "type": "string",
+                    "example": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD"
+                },
+                "is_url": {
+                    "description": "true if data is URL",
+                    "type": "boolean",
+                    "example": false
+                },
+                "max_height": {
+                    "description": "Optional: max height (default 1920)",
+                    "type": "integer",
+                    "example": 1920
+                },
+                "max_width": {
+                    "description": "Optional: max width (default 1920)",
+                    "type": "integer",
+                    "example": 1920
+                },
+                "quality": {
+                    "description": "Optional: JPEG quality 1-100 (default 95)",
+                    "type": "integer",
+                    "example": 90
+                }
+            }
+        },
+        "whats-convert-api_internal_services.ImageResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "description": "base64 jpeg image",
+                    "type": "string",
+                    "example": "data:image/jpeg;base64,/9j/4AAQSkZJRgABA"
+                },
+                "height": {
+                    "description": "Image height",
+                    "type": "integer",
+                    "example": 600
+                },
+                "size": {
+                    "description": "Size in bytes",
+                    "type": "integer",
+                    "example": 20480
+                },
+                "width": {
+                    "description": "Image width",
+                    "type": "integer",
+                    "example": 800
+                }
+            }
+        }
+    }
+}

@@ -63,6 +63,7 @@ type Config struct {
 	Debug           bool
 	HotReload       bool
 	EnableProfiling bool
+	EnableSwagger   bool
 
 	// Production settings
 	ProductionMode  bool
@@ -152,6 +153,7 @@ func Load() *Config {
 		Debug:           getBool("DEBUG", false),
 		HotReload:       getBool("HOT_RELOAD", false),
 		EnableProfiling: getBool("ENABLE_PROFILING", false),
+		EnableSwagger:   getBool("ENABLE_SWAGGER", true),
 
 		// Production settings
 		ProductionMode:  getBool("PRODUCTION_MODE", false),

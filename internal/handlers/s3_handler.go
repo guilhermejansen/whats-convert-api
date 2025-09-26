@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v3"
+	"whats-convert-api/internal/models"
 	"whats-convert-api/internal/providers"
 	"whats-convert-api/internal/services"
 )
@@ -30,54 +31,22 @@ func NewS3Handler(s3Service *services.S3Service, uploadManager *services.UploadM
 	}
 }
 
-// S3UploadRequest represents a file upload request
-type S3UploadRequest struct {
-	Key            string            `json:"key,omitempty"`
-	Public         bool              `json:"public"`
-	ExpirationDays int               `json:"expires_days"`
-	ContentType    string            `json:"content_type,omitempty"`
-	Metadata       map[string]string `json:"metadata,omitempty"`
-	StorageClass   string            `json:"storage_class,omitempty"`
-}
-
-// S3Base64UploadRequest represents a base64 upload request
-type S3Base64UploadRequest struct {
-	Data           string            `json:"data"`
-	Filename       string            `json:"filename,omitempty"`
-	Key            string            `json:"key,omitempty"`
-	Public         bool              `json:"public"`
-	ExpirationDays int               `json:"expires_days"`
-	ContentType    string            `json:"content_type,omitempty"`
-	Metadata       map[string]string `json:"metadata,omitempty"`
-	StorageClass   string            `json:"storage_class,omitempty"`
-}
-
-// S3UploadResponse represents an upload response
-type S3UploadResponse struct {
-	Success  bool                    `json:"success"`
-	UploadID string                  `json:"upload_id,omitempty"`
-	Result   *providers.UploadResult `json:"result,omitempty"`
-	Message  string                  `json:"message,omitempty"`
-	Error    string                  `json:"error,omitempty"`
-}
-
-// S3UploadStatusResponse represents an upload status response
-type S3UploadStatusResponse struct {
-	UploadID         string                  `json:"upload_id"`
-	Status           string                  `json:"status"`
-	Progress         float64                 `json:"progress"`
-	BytesTransferred int64                   `json:"bytes_transferred"`
-	TotalBytes       int64                   `json:"total_bytes"`
-	StartTime        time.Time               `json:"start_time"`
-	EndTime          *time.Time              `json:"end_time,omitempty"`
-	Error            string                  `json:"error,omitempty"`
-	Result           *providers.UploadResult `json:"result,omitempty"`
-}
-
-// UploadFile handles file upload via multipart/form-data
+// UploadFile godoc
+// @Summary Start multipart upload to S3-compatible storage
+// @Description Accepts large media as multipart form-data and dispatches asynchronous upload jobs.
+// @Tags S3
+// @Accept multipart/form-data
+// @Produce json
+// @Param file formData file true "Binary file to upload"
+// @Param options formData string false "JSON encoded upload options" example:{"public":false}
+// @Success 202 {object} models.S3UploadResponse
+// @Failure 400 {object} models.S3UploadResponse
+// @Failure 500 {object} models.S3UploadResponse
+// @Failure 503 {object} models.S3UploadResponse
+// @Router /upload/s3 [post]
 func (h *S3Handler) UploadFile(c fiber.Ctx) error {
 	if !h.s3Service.IsEnabled() {
-		return c.Status(http.StatusServiceUnavailable).JSON(S3UploadResponse{
+		return c.Status(http.StatusServiceUnavailable).JSON(models.S3UploadResponse{
 			Success: false,
 			Error:   "S3 upload service is disabled",
 		})
@@ -86,7 +55,7 @@ func (h *S3Handler) UploadFile(c fiber.Ctx) error {
 	// Parse multipart form
 	form, err := c.MultipartForm()
 	if err != nil {
-		return c.Status(http.StatusBadRequest).JSON(S3UploadResponse{
+		return c.Status(http.StatusBadRequest).JSON(models.S3UploadResponse{
 			Success: false,
 			Error:   "Failed to parse multipart form: " + err.Error(),
 		})
@@ -95,7 +64,7 @@ func (h *S3Handler) UploadFile(c fiber.Ctx) error {
 	// Get file from form
 	files := form.File["file"]
 	if len(files) == 0 {
-		return c.Status(http.StatusBadRequest).JSON(S3UploadResponse{
+		return c.Status(http.StatusBadRequest).JSON(models.S3UploadResponse{
 			Success: false,
 			Error:   "No file provided",
 		})
@@ -106,7 +75,7 @@ func (h *S3Handler) UploadFile(c fiber.Ctx) error {
 	// Open uploaded file
 	src, err := file.Open()
 	if err != nil {
-		return c.Status(http.StatusInternalServerError).JSON(S3UploadResponse{
+		return c.Status(http.StatusInternalServerError).JSON(models.S3UploadResponse{
 			Success: false,
 			Error:   "Failed to open uploaded file: " + err.Error(),
 		})
@@ -115,7 +84,7 @@ func (h *S3Handler) UploadFile(c fiber.Ctx) error {
 	fileBytes, err := io.ReadAll(src)
 	if err != nil {
 		src.Close()
-		return c.Status(http.StatusInternalServerError).JSON(S3UploadResponse{
+		return c.Status(http.StatusInternalServerError).JSON(models.S3UploadResponse{
 			Success: false,
 			Error:   "Failed to read uploaded file: " + err.Error(),
 		})
@@ -123,14 +92,14 @@ func (h *S3Handler) UploadFile(c fiber.Ctx) error {
 	src.Close()
 
 	if len(fileBytes) == 0 {
-		return c.Status(http.StatusBadRequest).JSON(S3UploadResponse{
+		return c.Status(http.StatusBadRequest).JSON(models.S3UploadResponse{
 			Success: false,
 			Error:   "Uploaded file is empty",
 		})
 	}
 
 	// Parse options from form
-	var options S3UploadRequest
+	var options models.S3UploadRequest
 	if optionsData := form.Value["options"]; len(optionsData) > 0 {
 		if err := json.Unmarshal([]byte(optionsData[0]), &options); err != nil {
 			log.Printf("Warning: Failed to parse upload options: %v", err)
@@ -173,7 +142,7 @@ func (h *S3Handler) UploadFile(c fiber.Ctx) error {
 		uploadOpts,
 	)
 	if err != nil {
-		return c.Status(http.StatusInternalServerError).JSON(S3UploadResponse{
+		return c.Status(http.StatusInternalServerError).JSON(models.S3UploadResponse{
 			Success: false,
 			Error:   "Failed to start upload: " + err.Error(),
 		})
@@ -182,25 +151,36 @@ func (h *S3Handler) UploadFile(c fiber.Ctx) error {
 	// Set original filename
 	uploadInfo.OriginalFilename = file.Filename
 
-	return c.Status(http.StatusAccepted).JSON(S3UploadResponse{
+	return c.Status(http.StatusAccepted).JSON(models.S3UploadResponse{
 		Success:  true,
 		UploadID: uploadInfo.ID,
 		Message:  "Upload started successfully",
 	})
 }
 
-// UploadBase64 handles base64 data upload
+// UploadBase64 godoc
+// @Summary Start base64 upload to S3-compatible storage
+// @Description Accepts pre-encoded data URIs and dispatches asynchronous upload jobs.
+// @Tags S3
+// @Accept json
+// @Produce json
+// @Param request body models.S3Base64UploadRequest true "Base64 upload request"
+// @Success 202 {object} models.S3UploadResponse
+// @Failure 400 {object} models.S3UploadResponse
+// @Failure 500 {object} models.S3UploadResponse
+// @Failure 503 {object} models.S3UploadResponse
+// @Router /upload/s3/base64 [post]
 func (h *S3Handler) UploadBase64(c fiber.Ctx) error {
 	if !h.s3Service.IsEnabled() {
-		return c.Status(http.StatusServiceUnavailable).JSON(S3UploadResponse{
+		return c.Status(http.StatusServiceUnavailable).JSON(models.S3UploadResponse{
 			Success: false,
 			Error:   "S3 upload service is disabled",
 		})
 	}
 
-	var req S3Base64UploadRequest
+	var req models.S3Base64UploadRequest
 	if err := c.Bind().Body(&req); err != nil {
-		return c.Status(http.StatusBadRequest).JSON(S3UploadResponse{
+		return c.Status(http.StatusBadRequest).JSON(models.S3UploadResponse{
 			Success: false,
 			Error:   "Invalid JSON payload: " + err.Error(),
 		})
@@ -208,7 +188,7 @@ func (h *S3Handler) UploadBase64(c fiber.Ctx) error {
 
 	// Validate required fields
 	if req.Data == "" {
-		return c.Status(http.StatusBadRequest).JSON(S3UploadResponse{
+		return c.Status(http.StatusBadRequest).JSON(models.S3UploadResponse{
 			Success: false,
 			Error:   "Missing required field: data",
 		})
@@ -252,7 +232,7 @@ func (h *S3Handler) UploadBase64(c fiber.Ctx) error {
 		uploadOpts,
 	)
 	if err != nil {
-		return c.Status(http.StatusInternalServerError).JSON(S3UploadResponse{
+		return c.Status(http.StatusInternalServerError).JSON(models.S3UploadResponse{
 			Success: false,
 			Error:   "Failed to start upload: " + err.Error(),
 		})
@@ -261,30 +241,38 @@ func (h *S3Handler) UploadBase64(c fiber.Ctx) error {
 	// Set original filename
 	uploadInfo.OriginalFilename = req.Filename
 
-	return c.Status(http.StatusAccepted).JSON(S3UploadResponse{
+	return c.Status(http.StatusAccepted).JSON(models.S3UploadResponse{
 		Success:  true,
 		UploadID: uploadInfo.ID,
 		Message:  "Upload started successfully",
 	})
 }
 
-// GetUploadStatus returns the status of an upload
+// GetUploadStatus godoc
+// @Summary Retrieve asynchronous upload status
+// @Tags S3
+// @Produce json
+// @Param id path string true "Upload identifier"
+// @Success 200 {object} models.S3UploadStatusResponse
+// @Failure 400 {object} models.ErrorResponse
+// @Failure 404 {object} models.ErrorResponse
+// @Router /upload/s3/status/{id} [get]
 func (h *S3Handler) GetUploadStatus(c fiber.Ctx) error {
 	uploadID := c.Params("id")
 	if uploadID == "" {
-		return c.Status(http.StatusBadRequest).JSON(fiber.Map{
-			"error": "Upload ID is required",
+		return c.Status(http.StatusBadRequest).JSON(models.ErrorResponse{
+			Error: "Upload ID is required",
 		})
 	}
 
 	uploadInfo, err := h.uploadManager.GetUploadStatus(uploadID)
 	if err != nil {
-		return c.Status(http.StatusNotFound).JSON(fiber.Map{
-			"error": "Upload not found",
+		return c.Status(http.StatusNotFound).JSON(models.ErrorResponse{
+			Error: "Upload not found",
 		})
 	}
 
-	response := S3UploadStatusResponse{
+	response := models.S3UploadStatusResponse{
 		UploadID:         uploadInfo.ID,
 		Status:           string(uploadInfo.Status),
 		Progress:         uploadInfo.Progress,
@@ -293,35 +281,49 @@ func (h *S3Handler) GetUploadStatus(c fiber.Ctx) error {
 		StartTime:        uploadInfo.StartTime,
 		EndTime:          uploadInfo.EndTime,
 		Error:            uploadInfo.Error,
-		Result:           uploadInfo.Result,
+		Result:           toS3UploadResult(uploadInfo.Result),
 	}
 
 	return c.JSON(response)
 }
 
-// CancelUpload cancels an ongoing upload
+// CancelUpload godoc
+// @Summary Cancel an in-flight upload job
+// @Tags S3
+// @Produce json
+// @Param id path string true "Upload identifier"
+// @Success 200 {object} models.MessageResponse
+// @Failure 400 {object} models.ErrorResponse
+// @Router /upload/s3/status/{id} [delete]
 func (h *S3Handler) CancelUpload(c fiber.Ctx) error {
 	uploadID := c.Params("id")
 	if uploadID == "" {
-		return c.Status(http.StatusBadRequest).JSON(fiber.Map{
-			"error": "Upload ID is required",
+		return c.Status(http.StatusBadRequest).JSON(models.ErrorResponse{
+			Error: "Upload ID is required",
 		})
 	}
 
 	err := h.uploadManager.CancelUpload(uploadID)
 	if err != nil {
-		return c.Status(http.StatusBadRequest).JSON(fiber.Map{
-			"error": err.Error(),
+		return c.Status(http.StatusBadRequest).JSON(models.ErrorResponse{
+			Error: err.Error(),
 		})
 	}
 
-	return c.JSON(fiber.Map{
-		"success": true,
-		"message": "Upload cancelled successfully",
+	return c.JSON(models.MessageResponse{
+		Success: true,
+		Message: "Upload cancelled successfully",
 	})
 }
 
-// ListUploads returns a list of uploads
+// ListUploads godoc
+// @Summary List recent upload jobs
+// @Tags S3
+// @Produce json
+// @Param status query string false "Filter by upload status (pending|uploading|completed|failed|cancelled)"
+// @Param limit query int false "Maximum number of results" default(50)
+// @Success 200 {object} models.S3UploadListResponse
+// @Router /upload/s3/list [get]
 func (h *S3Handler) ListUploads(c fiber.Ctx) error {
 	statusFilter := c.Query("status")
 	limit, _ := strconv.Atoi(c.Query("limit", "50"))
@@ -342,9 +344,9 @@ func (h *S3Handler) ListUploads(c fiber.Ctx) error {
 	}
 
 	// Convert to response format
-	var response []S3UploadStatusResponse
+	var response []models.S3UploadStatusResponse
 	for _, upload := range uploads {
-		response = append(response, S3UploadStatusResponse{
+		response = append(response, models.S3UploadStatusResponse{
 			UploadID:         upload.ID,
 			Status:           string(upload.Status),
 			Progress:         upload.Progress,
@@ -353,109 +355,167 @@ func (h *S3Handler) ListUploads(c fiber.Ctx) error {
 			StartTime:        upload.StartTime,
 			EndTime:          upload.EndTime,
 			Error:            upload.Error,
-			Result:           upload.Result,
+			Result:           toS3UploadResult(upload.Result),
 		})
 	}
 
-	return c.JSON(fiber.Map{
-		"uploads": response,
-		"count":   len(response),
+	return c.JSON(models.S3UploadListResponse{
+		Uploads: response,
+		Count:   len(response),
 	})
 }
 
-// GetS3Stats returns S3 service statistics
+// GetS3Stats godoc
+// @Summary S3 provider and upload manager metrics
+// @Tags S3
+// @Produce json
+// @Success 200 {object} models.S3StatsResponse
+// @Router /upload/s3/stats [get]
 func (h *S3Handler) GetS3Stats(c fiber.Ctx) error {
 	s3Stats := h.s3Service.GetStats()
 	uploadStats := h.uploadManager.GetStats()
 
-	return c.JSON(fiber.Map{
-		"s3_service": fiber.Map{
-			"enabled":            h.s3Service.IsEnabled(),
-			"total_uploads":      s3Stats.TotalUploads,
-			"successful_uploads": s3Stats.SuccessfulUploads,
-			"failed_uploads":     s3Stats.FailedUploads,
-			"total_bytes":        s3Stats.TotalBytes,
-			"success_rate":       s3Stats.GetSuccessRate(),
-			"avg_upload_time":    s3Stats.GetFormattedAverageTime(),
-			"last_upload":        s3Stats.LastUpload,
+	managerStats := models.S3UploadManagerStats{
+		StatusCounts: make(map[string]int),
+	}
+
+	if total, ok := uploadStats["total_uploads"].(int); ok {
+		managerStats.TotalUploads = total
+	}
+	if current, ok := uploadStats["current_uploads"].(int); ok {
+		managerStats.CurrentUploads = current
+	}
+	if max, ok := uploadStats["max_concurrent"].(int); ok {
+		managerStats.MaxConcurrent = max
+	}
+	if capacity, ok := uploadStats["capacity_used"].(float64); ok {
+		managerStats.CapacityUsed = capacity
+	}
+
+	if counts, ok := uploadStats["status_counts"].(map[services.UploadStatus]int); ok {
+		for status, count := range counts {
+			managerStats.StatusCounts[string(status)] = count
+		}
+	} else if counts, ok := uploadStats["status_counts"].(map[string]int); ok {
+		for status, count := range counts {
+			managerStats.StatusCounts[status] = count
+		}
+	}
+
+	response := models.S3StatsResponse{
+		S3Service: models.S3ServiceStats{
+			Enabled:           h.s3Service.IsEnabled(),
+			TotalUploads:      s3Stats.TotalUploads,
+			SuccessfulUploads: s3Stats.SuccessfulUploads,
+			FailedUploads:     s3Stats.FailedUploads,
+			TotalBytes:        s3Stats.TotalBytes,
+			SuccessRate:       s3Stats.GetSuccessRate(),
+			AvgUploadTime:     s3Stats.GetFormattedAverageTime(),
+			LastUpload:        s3Stats.LastUpload,
 		},
-		"upload_manager": uploadStats,
-	})
+		UploadManager: managerStats,
+	}
+
+	return c.JSON(response)
 }
 
-// GetS3Health checks S3 service health
+// GetS3Health godoc
+// @Summary S3 subsystem health
+// @Tags S3
+// @Produce json
+// @Success 200 {object} models.S3HealthResponse
+// @Failure 503 {object} models.S3HealthResponse
+// @Router /upload/s3/health [get]
 func (h *S3Handler) GetS3Health(c fiber.Ctx) error {
 	if !h.s3Service.IsEnabled() {
-		return c.JSON(fiber.Map{
-			"status":  "disabled",
-			"healthy": true,
-			"message": "S3 service is disabled",
+		return c.JSON(models.S3HealthResponse{
+			Status:  "disabled",
+			Healthy: true,
+			Message: "S3 service is disabled",
 		})
 	}
 
 	err := h.s3Service.HealthCheck(context.TODO())
 	if err != nil {
-		return c.Status(http.StatusServiceUnavailable).JSON(fiber.Map{
-			"status":  "unhealthy",
-			"healthy": false,
-			"error":   err.Error(),
+		return c.Status(http.StatusServiceUnavailable).JSON(models.S3HealthResponse{
+			Status:  "unhealthy",
+			Healthy: false,
+			Error:   err.Error(),
 		})
 	}
 
-	return c.JSON(fiber.Map{
-		"status":  "healthy",
-		"healthy": true,
-		"message": "S3 service is operational",
+	return c.JSON(models.S3HealthResponse{
+		Status:  "healthy",
+		Healthy: true,
+		Message: "S3 service is operational",
 	})
 }
 
-// DeleteObject deletes an object from S3
+// DeleteObject godoc
+// @Summary Delete object from storage
+// @Tags S3
+// @Produce json
+// @Param key path string true "Object key"
+// @Success 200 {object} models.MessageResponse
+// @Failure 400 {object} models.ErrorResponse
+// @Failure 500 {object} models.ErrorResponse
+// @Failure 503 {object} models.ErrorResponse
+// @Router /upload/s3/object/{key} [delete]
 func (h *S3Handler) DeleteObject(c fiber.Ctx) error {
 	if !h.s3Service.IsEnabled() {
-		return c.Status(http.StatusServiceUnavailable).JSON(fiber.Map{
-			"error": "S3 upload service is disabled",
+		return c.Status(http.StatusServiceUnavailable).JSON(models.ErrorResponse{
+			Error: "S3 upload service is disabled",
 		})
 	}
 
 	key := c.Params("key")
 	if key == "" {
-		return c.Status(http.StatusBadRequest).JSON(fiber.Map{
-			"error": "Object key is required",
+		return c.Status(http.StatusBadRequest).JSON(models.ErrorResponse{
+			Error: "Object key is required",
 		})
 	}
 
 	err := h.s3Service.DeleteObject(context.TODO(), key)
 	if err != nil {
-		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
-			"error": "Failed to delete object: " + err.Error(),
+		return c.Status(http.StatusInternalServerError).JSON(models.ErrorResponse{
+			Error: "Failed to delete object: " + err.Error(),
 		})
 	}
 
-	return c.JSON(fiber.Map{
-		"success": true,
-		"message": "Object deleted successfully",
+	return c.JSON(models.MessageResponse{
+		Success: true,
+		Message: "Object deleted successfully",
 	})
 }
 
-// GetObjectInfo retrieves metadata about an object
+// GetObjectInfo godoc
+// @Summary Retrieve object metadata
+// @Tags S3
+// @Produce json
+// @Param key path string true "Object key"
+// @Success 200 {object} providers.ObjectInfo
+// @Failure 400 {object} models.ErrorResponse
+// @Failure 404 {object} models.ErrorResponse
+// @Failure 503 {object} models.ErrorResponse
+// @Router /upload/s3/object/{key} [get]
 func (h *S3Handler) GetObjectInfo(c fiber.Ctx) error {
 	if !h.s3Service.IsEnabled() {
-		return c.Status(http.StatusServiceUnavailable).JSON(fiber.Map{
-			"error": "S3 upload service is disabled",
+		return c.Status(http.StatusServiceUnavailable).JSON(models.ErrorResponse{
+			Error: "S3 upload service is disabled",
 		})
 	}
 
 	key := c.Params("key")
 	if key == "" {
-		return c.Status(http.StatusBadRequest).JSON(fiber.Map{
-			"error": "Object key is required",
+		return c.Status(http.StatusBadRequest).JSON(models.ErrorResponse{
+			Error: "Object key is required",
 		})
 	}
 
 	info, err := h.s3Service.GetObjectInfo(context.TODO(), key)
 	if err != nil {
-		return c.Status(http.StatusNotFound).JSON(fiber.Map{
-			"error": "Object not found: " + err.Error(),
+		return c.Status(http.StatusNotFound).JSON(models.ErrorResponse{
+			Error: "Object not found: " + err.Error(),
 		})
 	}
 
@@ -483,4 +543,28 @@ func (h *S3Handler) RegisterS3Routes(app *fiber.App) {
 	// Service endpoints
 	s3.Get("/stats", h.GetS3Stats)
 	s3.Get("/health", h.GetS3Health)
+}
+
+func toS3UploadResult(res *providers.UploadResult) *models.S3UploadResult {
+	if res == nil {
+		return nil
+	}
+
+	var expiresAt *time.Time
+	if res.ExpiresAt != nil {
+		copyTime := *res.ExpiresAt
+		expiresAt = &copyTime
+	}
+
+	return &models.S3UploadResult{
+		Key:              res.Key,
+		PublicURL:        res.PublicURL,
+		Size:             res.Size,
+		ETag:             res.ETag,
+		VersionID:        res.VersionID,
+		ExpiresAt:        expiresAt,
+		Provider:         res.Provider,
+		UploadID:         res.UploadID,
+		ProcessingTimeMS: res.ProcessingTime.Milliseconds(),
+	}
 }

@@ -1,0 +1,424 @@
+{
+  "info": {
+    "_postman_id": "6fba6daf-ef7f-43f0-9c73-77a8f0e784c7",
+    "name": "WhatsApp Media Converter API",
+    "description": "Coleção Postman oficial para testar todos os endpoints da API de conversão de mídias do WhatsApp.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8080",
+      "type": "string"
+    },
+    {
+      "key": "upload_id",
+      "value": "00000000-0000-4000-8000-000000000000",
+      "type": "string"
+    },
+    {
+      "key": "object_key",
+      "value": "uploads/sample-object.dat",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "API Info",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Sucesso",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "body": "{\n  \"name\": \"WhatsApp Media Converter API\",\n  \"version\": \"1.0.0\",\n  \"endpoints\": {\n    \"audio\": \"/convert/audio\",\n    \"image\": \"/convert/image\",\n    \"batch_audio\": \"/convert/batch/audio\",\n    \"batch_image\": \"/convert/batch/image\",\n    \"health\": \"/health\",\n    \"stats\": \"/stats\",\n    \"s3_upload_form\": \"/upload/s3\",\n    \"s3_upload_base64\": \"/upload/s3/base64\",\n    \"s3_status\": \"/upload/s3/status/{id}\",\n    \"s3_list\": \"/upload/s3/list\",\n    \"s3_object\": \"/upload/s3/object/{key}\",\n    \"s3_health\": \"/upload/s3/health\",\n    \"s3_stats\": \"/upload/s3/stats\"\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/health",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "health"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Sucesso",
+          "status": "OK",
+          "code": 200,
+          "body": "{\n  \"status\": \"healthy\",\n  \"timestamp\": 1700000000,\n  \"audio\": {\n    \"total_conversions\": 1280,\n    \"failed_conversions\": 12,\n    \"success_rate\": \"99.06%\",\n    \"avg_conversion_time\": 135\n  },\n  \"image\": {\n    \"total_conversions\": 980,\n    \"failed_conversions\": 8,\n    \"success_rate\": \"99.18%\",\n    \"avg_conversion_time\": 110,\n    \"vips_available\": true\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "Stats",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/stats",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "stats"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Sucesso",
+          "status": "OK",
+          "code": 200,
+          "body": "{\n  \"audio\": {\n    \"total_conversions\": 1280,\n    \"failed_conversions\": 12,\n    \"avg_conversion_time_ms\": 135\n  },\n  \"image\": {\n    \"total_conversions\": 980,\n    \"failed_conversions\": 8,\n    \"avg_conversion_time_ms\": 110,\n    \"vips_conversions\": 620,\n    \"ffmpeg_conversions\": 360\n  },\n  \"timestamp\": 1700000000\n}"
+        }
+      ]
+    },
+    {
+      "name": "Convert Audio",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"data\": \"data:audio/aac;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4LjEyNi4xMDA=\",\n  \"is_url\": false,\n  \"input_type\": \"aac\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/convert/audio",
+          "host": [
+            "{{base_url}}"
+          ],
+        	"path": [
+        		"convert",
+        		"audio"
+        	]
+        }
+      },
+      "response": [
+        {
+          "name": "Sucesso",
+          "status": "OK",
+          "code": 200,
+          "body": "{\n  \"data\": \"data:audio/ogg;codecs=opus;base64,T2dnUwACAAAAAABkmtNvAAAAAC4AAAAoAAAACkZGF0YQAAAAA=\",\n  \"duration\": 8,\n  \"size\": 42144\n}"
+        }
+      ]
+    },
+    {
+      "name": "Convert Image",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"data\": \"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABDQottAAAAABJRU5ErkJggg==\",\n  \"is_url\": false,\n  \"max_width\": 1024,\n  \"max_height\": 1024,\n  \"quality\": 90\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/convert/image",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "convert",
+            "image"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Sucesso",
+          "status": "OK",
+          "code": 200,
+          "body": "{\n  \"data\": \"data:image/jpeg;base64,/9j/4AAQSkZJRgABAgAAAQABAAD/2wCEAAkGBxISEhUQEhIVFRUVFRUVFRUVFRUVFRUVFRUXFhUVFRUYHSggGBolHRUVITEhJSkrLi4uFx8zODMtNygtLisBCgoKDg0OGxAQGzIlHyUtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLf/AABEIAJYAlgMBIgACEQEDEQH/xAAbAAEAAgMBAQAAAAAAAAAAAAAABQYBBAcDAv/EAD8QAAEDAgQDBQcEAwYHAAAAAAEAAgMEEQUSITEGEyJBUWFxgZEykaGx8BQjQlJy0fAHM2JykrIkQ1ODo8L/xAAZAQADAQEBAAAAAAAAAAAAAAAAAQIDBAX/xAAlEQACAgICAgICAwAAAAAAAAAAAQIRAwQSITFREyJBYXEyQnH/2gAMAwEAAhEDEQA/APv6KqmUoUKoFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAVhwqSVCgqBQAoFKKAClShQClShQClShQClShQClShQClShQClShQClShQClShQClShQClShQClShQClShQ//Z\",\n  \"width\": 800,\n  \"height\": 600,\n  \"size\": 20480\n}"
+        }
+      ]
+    },
+    {
+      "name": "Batch Convert Audio",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "[\n  {\n    \"data\": \"data:audio/aac;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4LjEyNi4xMDA=\",\n    \"is_url\": false,\n    \"input_type\": \"aac\"\n  },\n  {\n    \"data\": \"data:audio/aac;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4LjEyNi4xMDA=\",\n    \"is_url\": false,\n    \"input_type\": \"aac\"\n  }\n]",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/convert/batch/audio",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "convert",
+            "batch",
+            "audio"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Sucesso",
+          "status": "OK",
+          "code": 200,
+          "body": "{\n  \"results\": [\n    {\n      \"data\": \"data:audio/ogg;codecs=opus;base64,T2dnUwACAAAA...\",\n      \"duration\": 8,\n      \"size\": 42144\n    },\n    {\n      \"data\": \"data:audio/ogg;codecs=opus;base64,T2dnUwACAAAA...\",\n      \"duration\": 8,\n      \"size\": 42144\n    }\n  ],\n  \"count\": 2\n}"
+        }
+      ]
+    },
+    {
+      "name": "Batch Convert Image",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "[\n  {\n    \"data\": \"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABDQottAAAAABJRU5ErkJggg==\",\n    \"is_url\": false,\n    \"max_width\": 1024,\n    \"max_height\": 1024,\n    \"quality\": 90\n  }\n]",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/convert/batch/image",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "convert",
+            "batch",
+            "image"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Sucesso",
+          "status": "OK",
+          "code": 200,
+          "body": "{\n  \"results\": [\n    {\n      \"data\": \"data:image/jpeg;base64,/9j/4AAQSkZJRgABAgAAAQABAAD/2wCE...\",\n      \"width\": 800,\n      \"height\": 600,\n      \"size\": 20480\n    }\n  ],\n  \"count\": 1\n}"
+        }
+      ]
+    },
+    {
+      "name": "Upload Base64 to S3",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"data\": \"data:audio/ogg;base64,T2dnUwACAAAAAAAAAAC4AAAAKAAAACkZGF0YQAAAAA=\",\n  \"filename\": \"voice-note.opus\",\n  \"public\": false,\n  \"expires_days\": 7,\n  \"metadata\": {\n    \"source\": \"postman\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/upload/s3/base64",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "upload",
+            "s3",
+            "base64"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Aceito",
+          "status": "Accepted",
+          "code": 202,
+          "body": "{\n  \"success\": true,\n  \"upload_id\": \"{{upload_id}}\",\n  \"message\": \"Upload started successfully\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Consultar Upload S3",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/upload/s3/status/{{upload_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "upload",
+            "s3",
+            "status",
+            "{{upload_id}}"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Sucesso",
+          "status": "OK",
+          "code": 200,
+          "body": "{\n  \"upload_id\": \"{{upload_id}}\",\n  \"status\": \"completed\",\n  \"progress\": 100,\n  \"bytes_transferred\": 7340032,\n  \"total_bytes\": 7340032,\n  \"result\": {\n    \"key\": \"uploads/audio/voice-note.opus\",\n    \"url\": \"https://cdn.example.com/uploads/audio/voice-note.opus\",\n    \"size\": 7340032,\n    \"etag\": \"\\\"9b2cf535f27731c974343645a3985328\\\"\",\n    \"provider\": \"minio\",\n    \"processing_time_ms\": 1200\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "Listar Uploads S3",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/upload/s3/list",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "upload",
+            "s3",
+            "list"
+          ],
+          "query": [
+            {
+              "key": "limit",
+              "value": "10"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Estatísticas S3",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/upload/s3/stats",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "upload",
+            "s3",
+            "stats"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Saúde S3",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/upload/s3/health",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "upload",
+            "s3",
+            "health"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Remover Objeto S3",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/upload/s3/object/{{object_key}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "upload",
+            "s3",
+            "object",
+            "{{object_key}}"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Sucesso",
+          "status": "OK",
+          "code": 200,
+          "body": "{\n  \"success\": true,\n  \"message\": \"Object deleted successfully\"\n}"
+        }
+      ]
+    }
+  ]
+}

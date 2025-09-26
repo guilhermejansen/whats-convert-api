@@ -34,19 +34,19 @@ type ImageConverterStats struct {
 
 // ImageRequest represents an image conversion request
 type ImageRequest struct {
-	Data      string `json:"data"`       // base64 or URL
-	IsURL     bool   `json:"is_url"`     // true if data is URL
-	MaxWidth  int    `json:"max_width"`  // Optional: max width (default 1920)
-	MaxHeight int    `json:"max_height"` // Optional: max height (default 1920)
-	Quality   int    `json:"quality"`    // Optional: JPEG quality 1-100 (default 95)
+	Data      string `json:"data" example:"data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD"` // base64 or URL
+	IsURL     bool   `json:"is_url" example:"false"`                                            // true if data is URL
+	MaxWidth  int    `json:"max_width" example:"1920"`                                          // Optional: max width (default 1920)
+	MaxHeight int    `json:"max_height" example:"1920"`                                         // Optional: max height (default 1920)
+	Quality   int    `json:"quality" example:"90"`                                              // Optional: JPEG quality 1-100 (default 95)
 }
 
 // ImageResponse represents the conversion response
 type ImageResponse struct {
-	Data   string `json:"data"`   // base64 jpeg image
-	Width  int    `json:"width"`  // Image width
-	Height int    `json:"height"` // Image height
-	Size   int    `json:"size"`   // Size in bytes
+	Data   string `json:"data" example:"data:image/jpeg;base64,/9j/4AAQSkZJRgABA"` // base64 jpeg image
+	Width  int    `json:"width" example:"800"`                                     // Image width
+	Height int    `json:"height" example:"600"`                                    // Image height
+	Size   int    `json:"size" example:"20480"`                                    // Size in bytes
 }
 
 // NewImageConverter creates a new image converter

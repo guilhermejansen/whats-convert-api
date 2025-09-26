@@ -1,0 +1,846 @@
+basePath: /
+definitions:
+  whats-convert-api_internal_models.APIInfoResponse:
+    properties:
+      endpoints:
+        additionalProperties:
+          type: string
+        type: object
+      name:
+        example: WhatsApp Media Converter API
+        type: string
+      version:
+        example: 1.0.0
+        type: string
+    type: object
+  whats-convert-api_internal_models.AudioHealthMetrics:
+    properties:
+      avg_conversion_time:
+        example: 135
+        type: integer
+      failed_conversions:
+        example: 12
+        type: integer
+      success_rate:
+        example: 99.06%
+        type: string
+      total_conversions:
+        example: 1280
+        type: integer
+    type: object
+  whats-convert-api_internal_models.BatchAudioResponse:
+    properties:
+      count:
+        example: 2
+        type: integer
+      results:
+        items:
+          $ref: '#/definitions/whats-convert-api_internal_services.AudioResponse'
+        type: array
+    type: object
+  whats-convert-api_internal_models.BatchImageResponse:
+    properties:
+      count:
+        example: 2
+        type: integer
+      results:
+        items:
+          $ref: '#/definitions/whats-convert-api_internal_services.ImageResponse'
+        type: array
+    type: object
+  whats-convert-api_internal_models.ConverterStats:
+    properties:
+      avg_conversion_time_ms:
+        example: 135
+        type: integer
+      failed_conversions:
+        example: 12
+        type: integer
+      total_conversions:
+        example: 1280
+        type: integer
+    type: object
+  whats-convert-api_internal_models.ErrorResponse:
+    properties:
+      details:
+        example: Missing 'data' field
+        type: string
+      error:
+        example: Invalid request
+        type: string
+    type: object
+  whats-convert-api_internal_models.HealthResponse:
+    properties:
+      audio:
+        $ref: '#/definitions/whats-convert-api_internal_models.AudioHealthMetrics'
+      image:
+        $ref: '#/definitions/whats-convert-api_internal_models.ImageHealthMetrics'
+      status:
+        example: healthy
+        type: string
+      timestamp:
+        example: 1700000000
+        type: integer
+    type: object
+  whats-convert-api_internal_models.ImageConverterStats:
+    properties:
+      avg_conversion_time_ms:
+        example: 110
+        type: integer
+      failed_conversions:
+        example: 8
+        type: integer
+      ffmpeg_conversions:
+        example: 360
+        type: integer
+      total_conversions:
+        example: 980
+        type: integer
+      vips_conversions:
+        example: 620
+        type: integer
+    type: object
+  whats-convert-api_internal_models.ImageHealthMetrics:
+    properties:
+      avg_conversion_time:
+        example: 110
+        type: integer
+      failed_conversions:
+        example: 8
+        type: integer
+      success_rate:
+        example: 99.18%
+        type: string
+      total_conversions:
+        example: 980
+        type: integer
+      vips_available:
+        example: true
+        type: boolean
+    type: object
+  whats-convert-api_internal_models.MessageResponse:
+    properties:
+      message:
+        example: Operation completed successfully
+        type: string
+      success:
+        example: true
+        type: boolean
+    type: object
+  whats-convert-api_internal_models.S3Base64UploadRequest:
+    properties:
+      content_type:
+        example: audio/ogg
+        type: string
+      data:
+        example: data:audio/ogg;base64,T2dnUwACAAAAAAAAAAB
+        type: string
+      expires_days:
+        example: 3
+        type: integer
+      filename:
+        example: voice-note.opus
+        type: string
+      key:
+        example: uploads/audio/voice-note.opus
+        type: string
+      metadata:
+        additionalProperties:
+          type: string
+        type: object
+      public:
+        example: false
+        type: boolean
+      storage_class:
+        example: STANDARD
+        type: string
+    type: object
+  whats-convert-api_internal_models.S3HealthResponse:
+    properties:
+      error:
+        example: failed to connect to bucket
+        type: string
+      healthy:
+        example: true
+        type: boolean
+      message:
+        example: S3 service is operational
+        type: string
+      status:
+        example: healthy
+        type: string
+    type: object
+  whats-convert-api_internal_models.S3ServiceStats:
+    properties:
+      avg_upload_time:
+        example: 1.2s
+        type: string
+      enabled:
+        example: true
+        type: boolean
+      failed_uploads:
+        example: 4
+        type: integer
+      last_upload:
+        example: "2024-03-31T12:00:00Z"
+        type: string
+      success_rate:
+        example: 98.33
+        type: number
+      successful_uploads:
+        example: 236
+        type: integer
+      total_bytes:
+        example: 73400320
+        type: integer
+      total_uploads:
+        example: 240
+        type: integer
+    type: object
+  whats-convert-api_internal_models.S3StatsResponse:
+    properties:
+      s3_service:
+        $ref: '#/definitions/whats-convert-api_internal_models.S3ServiceStats'
+      upload_manager:
+        $ref: '#/definitions/whats-convert-api_internal_models.S3UploadManagerStats'
+    type: object
+  whats-convert-api_internal_models.S3UploadListResponse:
+    properties:
+      count:
+        example: 1
+        type: integer
+      uploads:
+        items:
+          $ref: '#/definitions/whats-convert-api_internal_models.S3UploadStatusResponse'
+        type: array
+    type: object
+  whats-convert-api_internal_models.S3UploadManagerStats:
+    properties:
+      capacity_used:
+        example: 33.33
+        type: number
+      current_uploads:
+        example: 1
+        type: integer
+      max_concurrent:
+        example: 3
+        type: integer
+      status_counts:
+        additionalProperties:
+          type: integer
+        type: object
+      total_uploads:
+        example: 5
+        type: integer
+    type: object
+  whats-convert-api_internal_models.S3UploadResponse:
+    properties:
+      error:
+        example: Failed to start upload
+        type: string
+      message:
+        example: Upload started successfully
+        type: string
+      result:
+        $ref: '#/definitions/whats-convert-api_internal_models.S3UploadResult'
+      success:
+        example: true
+        type: boolean
+      upload_id:
+        example: 3f99d60f-bd8d-49e6-9ecf-2fbc9e4adffe
+        type: string
+    type: object
+  whats-convert-api_internal_models.S3UploadResult:
+    properties:
+      etag:
+        example: '"9b2cf535f27731c974343645a3985328"'
+        type: string
+      expires_at:
+        example: "2024-04-01T12:00:00Z"
+        type: string
+      key:
+        example: uploads/audio/sample.opus
+        type: string
+      processing_time_ms:
+        example: 1200
+        type: integer
+      provider:
+        example: minio
+        type: string
+      size:
+        example: 7340032
+        type: integer
+      upload_id:
+        example: 44c62b0d-7d55-4c74-9f65-8c7ab1f06642
+        type: string
+      url:
+        example: https://cdn.example.com/uploads/audio/sample.opus
+        type: string
+      version_id:
+        example: 3/L4kqtJlcpXroDTDmJ+rmSpXd3dIbrHY
+        type: string
+    type: object
+  whats-convert-api_internal_models.S3UploadStatusResponse:
+    properties:
+      bytes_transferred:
+        example: 1048576
+        type: integer
+      end_time:
+        example: "2024-03-31T12:00:10Z"
+        type: string
+      error:
+        example: connection reset by peer
+        type: string
+      progress:
+        example: 42.5
+        type: number
+      result:
+        $ref: '#/definitions/whats-convert-api_internal_models.S3UploadResult'
+      start_time:
+        example: "2024-03-31T12:00:00Z"
+        type: string
+      status:
+        example: uploading
+        type: string
+      total_bytes:
+        example: 5242880
+        type: integer
+      upload_id:
+        example: 3f99d60f-bd8d-49e6-9ecf-2fbc9e4adffe
+        type: string
+    type: object
+  whats-convert-api_internal_models.StatsResponse:
+    properties:
+      audio:
+        $ref: '#/definitions/whats-convert-api_internal_models.ConverterStats'
+      image:
+        $ref: '#/definitions/whats-convert-api_internal_models.ImageConverterStats'
+      timestamp:
+        example: 1700000000
+        type: integer
+    type: object
+  whats-convert-api_internal_providers.ObjectInfo:
+    properties:
+      content_type:
+        type: string
+      etag:
+        type: string
+      key:
+        type: string
+      last_modified:
+        type: string
+      metadata:
+        additionalProperties:
+          type: string
+        type: object
+      size:
+        type: integer
+      storage_class:
+        type: string
+      version_id:
+        type: string
+    type: object
+  whats-convert-api_internal_services.AudioRequest:
+    properties:
+      data:
+        description: base64 or URL
+        example: data:audio/aac;base64,T2dnUwACAAAAAAAAAAB
+        type: string
+      input_type:
+        description: 'Optional: mp3, wav, m4a, etc.'
+        example: mp3
+        type: string
+      is_url:
+        description: true if data is URL
+        example: false
+        type: boolean
+    type: object
+  whats-convert-api_internal_services.AudioResponse:
+    properties:
+      data:
+        description: base64 opus audio
+        example: data:audio/ogg;codecs=opus;base64,T2dnUwACAAAA
+        type: string
+      duration:
+        description: Duration in seconds
+        example: 8
+        type: integer
+      size:
+        description: Size in bytes
+        example: 42144
+        type: integer
+    type: object
+  whats-convert-api_internal_services.ImageRequest:
+    properties:
+      data:
+        description: base64 or URL
+        example: data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD
+        type: string
+      is_url:
+        description: true if data is URL
+        example: false
+        type: boolean
+      max_height:
+        description: 'Optional: max height (default 1920)'
+        example: 1920
+        type: integer
+      max_width:
+        description: 'Optional: max width (default 1920)'
+        example: 1920
+        type: integer
+      quality:
+        description: 'Optional: JPEG quality 1-100 (default 95)'
+        example: 90
+        type: integer
+    type: object
+  whats-convert-api_internal_services.ImageResponse:
+    properties:
+      data:
+        description: base64 jpeg image
+        example: data:image/jpeg;base64,/9j/4AAQSkZJRgABA
+        type: string
+      height:
+        description: Image height
+        example: 600
+        type: integer
+      size:
+        description: Size in bytes
+        example: 20480
+        type: integer
+      width:
+        description: Image width
+        example: 800
+        type: integer
+    type: object
+info:
+  contact:
+    email: suporte@setupautomatizado.com.br
+    name: Guilherme Jansen
+    url: https://github.com/guilhermejansen
+  description: |-
+    High-performance media conversion API delivering WhatsApp-ready audio and images.
+
+    **Author:** Guilherme Jansen · [GitHub](https://github.com/guilhermejansen)
+    **Contato direto:** suporte@setupautomatizado.com.br
+    **Coleção Postman pronta:** [Download](./swagger/postman.json)
+
+    Use os exemplos documentados em cada endpoint para testar rapidamente conversões de áudio, imagem e operações S3.
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  title: WhatsApp Media Converter API
+  version: 1.0.0
+paths:
+  /api:
+    get:
+      description: Provides API version and available endpoint catalogue.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/whats-convert-api_internal_models.APIInfoResponse'
+      summary: API metadata
+      tags:
+      - General
+  /convert/audio:
+    post:
+      consumes:
+      - application/json
+      - multipart/form-data
+      description: Accepts base64 payloads or multipart uploads and returns an optimized
+        Opus data URI.
+      parameters:
+      - description: Audio conversion request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/whats-convert-api_internal_services.AudioRequest'
+      - description: Audio file when using multipart
+        in: formData
+        name: file
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/whats-convert-api_internal_services.AudioResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/whats-convert-api_internal_models.ErrorResponse'
+        "408":
+          description: Request Timeout
+          schema:
+            $ref: '#/definitions/whats-convert-api_internal_models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/whats-convert-api_internal_models.ErrorResponse'
+      summary: Convert audio to WhatsApp-compatible Opus format
+      tags:
+      - Conversion
+  /convert/batch/audio:
+    post:
+      consumes:
+      - application/json
+      description: Processes up to 10 audio conversion jobs concurrently.
+      parameters:
+      - description: Batch audio conversion request
+        in: body
+        name: request
+        required: true
+        schema:
+          items:
+            $ref: '#/definitions/whats-convert-api_internal_services.AudioRequest'
+          type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/whats-convert-api_internal_models.BatchAudioResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/whats-convert-api_internal_models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/whats-convert-api_internal_models.ErrorResponse'
+      summary: Convert a batch of audio payloads
+      tags:
+      - Conversion
+  /convert/batch/image:
+    post:
+      consumes:
+      - application/json
+      description: Processes up to 10 image conversion jobs concurrently.
+      parameters:
+      - description: Batch image conversion request
+        in: body
+        name: request
+        required: true
+        schema:
+          items:
+            $ref: '#/definitions/whats-convert-api_internal_services.ImageRequest'
+          type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/whats-convert-api_internal_models.BatchImageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/whats-convert-api_internal_models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/whats-convert-api_internal_models.ErrorResponse'
+      summary: Convert a batch of image payloads
+      tags:
+      - Conversion
+  /convert/image:
+    post:
+      consumes:
+      - application/json
+      - multipart/form-data
+      description: Accepts base64 payloads or multipart uploads and returns a compressed
+        JPEG data URI.
+      parameters:
+      - description: Image conversion request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/whats-convert-api_internal_services.ImageRequest'
+      - description: Image file when using multipart
+        in: formData
+        name: file
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/whats-convert-api_internal_services.ImageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/whats-convert-api_internal_models.ErrorResponse'
+        "408":
+          description: Request Timeout
+          schema:
+            $ref: '#/definitions/whats-convert-api_internal_models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/whats-convert-api_internal_models.ErrorResponse'
+      summary: Convert image to WhatsApp-optimized JPEG
+      tags:
+      - Conversion
+  /health:
+    get:
+      description: Returns aggregated success metrics for audio and image converters.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/whats-convert-api_internal_models.HealthResponse'
+      summary: Service health snapshot
+      tags:
+      - Monitoring
+  /stats:
+    get:
+      description: Exposes raw converter counters for observability integrations.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/whats-convert-api_internal_models.StatsResponse'
+      summary: Converter statistics
+      tags:
+      - Monitoring
+  /upload/s3:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Accepts large media as multipart form-data and dispatches asynchronous
+        upload jobs.
+      parameters:
+      - description: Binary file to upload
+        in: formData
+        name: file
+        required: true
+        type: file
+      - description: JSON encoded upload options
+        in: formData
+        name: options
+        type: string
+      produces:
+      - application/json
+      responses:
+        "202":
+          description: Accepted
+          schema:
+            $ref: '#/definitions/whats-convert-api_internal_models.S3UploadResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/whats-convert-api_internal_models.S3UploadResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/whats-convert-api_internal_models.S3UploadResponse'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/whats-convert-api_internal_models.S3UploadResponse'
+      summary: Start multipart upload to S3-compatible storage
+      tags:
+      - S3
+  /upload/s3/base64:
+    post:
+      consumes:
+      - application/json
+      description: Accepts pre-encoded data URIs and dispatches asynchronous upload
+        jobs.
+      parameters:
+      - description: Base64 upload request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/whats-convert-api_internal_models.S3Base64UploadRequest'
+      produces:
+      - application/json
+      responses:
+        "202":
+          description: Accepted
+          schema:
+            $ref: '#/definitions/whats-convert-api_internal_models.S3UploadResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/whats-convert-api_internal_models.S3UploadResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/whats-convert-api_internal_models.S3UploadResponse'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/whats-convert-api_internal_models.S3UploadResponse'
+      summary: Start base64 upload to S3-compatible storage
+      tags:
+      - S3
+  /upload/s3/health:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/whats-convert-api_internal_models.S3HealthResponse'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/whats-convert-api_internal_models.S3HealthResponse'
+      summary: S3 subsystem health
+      tags:
+      - S3
+  /upload/s3/list:
+    get:
+      parameters:
+      - description: Filter by upload status (pending|uploading|completed|failed|cancelled)
+        in: query
+        name: status
+        type: string
+      - default: 50
+        description: Maximum number of results
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/whats-convert-api_internal_models.S3UploadListResponse'
+      summary: List recent upload jobs
+      tags:
+      - S3
+  /upload/s3/object/{key}:
+    delete:
+      parameters:
+      - description: Object key
+        in: path
+        name: key
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/whats-convert-api_internal_models.MessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/whats-convert-api_internal_models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/whats-convert-api_internal_models.ErrorResponse'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/whats-convert-api_internal_models.ErrorResponse'
+      summary: Delete object from storage
+      tags:
+      - S3
+    get:
+      parameters:
+      - description: Object key
+        in: path
+        name: key
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/whats-convert-api_internal_providers.ObjectInfo'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/whats-convert-api_internal_models.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/whats-convert-api_internal_models.ErrorResponse'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/whats-convert-api_internal_models.ErrorResponse'
+      summary: Retrieve object metadata
+      tags:
+      - S3
+  /upload/s3/stats:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/whats-convert-api_internal_models.S3StatsResponse'
+      summary: S3 provider and upload manager metrics
+      tags:
+      - S3
+  /upload/s3/status/{id}:
+    delete:
+      parameters:
+      - description: Upload identifier
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/whats-convert-api_internal_models.MessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/whats-convert-api_internal_models.ErrorResponse'
+      summary: Cancel an in-flight upload job
+      tags:
+      - S3
+    get:
+      parameters:
+      - description: Upload identifier
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/whats-convert-api_internal_models.S3UploadStatusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/whats-convert-api_internal_models.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/whats-convert-api_internal_models.ErrorResponse'
+      summary: Retrieve asynchronous upload status
+      tags:
+      - S3
+swagger: "2.0"
