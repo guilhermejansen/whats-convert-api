@@ -1,3 +1,7 @@
+## <small>1.2.3 (2025-09-26)</small>
+
+* fix: comentar verificação de saúde no Dockerfile ([b19b4251f4035a7cf39990c7674d5a8117a56804](https://github.com/guilhermejansen/whats-convert-api/commit/b19b4251f4035a7cf39990c7674d5a8117a56804))
+
 ## <small>1.2.2 (2025-09-26)</small>
 
 * Merge branch 'main' of github.com:guilhermejansen/whats-convert-api ([8f658d02cea49c44b6c0b66941805543ca4195c1](https://github.com/guilhermejansen/whats-convert-api/commit/8f658d02cea49c44b6c0b66941805543ca4195c1))
