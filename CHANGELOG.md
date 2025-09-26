@@ -1,3 +1,8 @@
+## <small>1.2.2 (2025-09-26)</small>
+
+* Merge branch 'main' of github.com:guilhermejansen/whats-convert-api ([8f658d02cea49c44b6c0b66941805543ca4195c1](https://github.com/guilhermejansen/whats-convert-api/commit/8f658d02cea49c44b6c0b66941805543ca4195c1))
+* fix: atualizar Dockerfile para incluir documentação e interface web ([4a8b09408de05519625033f6ef5087abab8eb8a1](https://github.com/guilhermejansen/whats-convert-api/commit/4a8b09408de05519625033f6ef5087abab8eb8a1))
+
 ## <small>1.2.1 (2025-09-26)</small>
 
 * fix: corrigir formatação do Dockerfile ([4ff2ad6e3eaeb637c7494194b369f2a21ff5f3ff](https://github.com/guilhermejansen/whats-convert-api/commit/4ff2ad6e3eaeb637c7494194b369f2a21ff5f3ff))
