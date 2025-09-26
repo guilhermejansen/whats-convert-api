@@ -1,3 +1,8 @@
+## 1.2.0 (2025-09-26)
+
+* Merge branch 'main' of github.com:guilhermejansen/whats-convert-api ([22699d80f1bab3ac0d9a9f3bfa0deb120f8793f1](https://github.com/guilhermejansen/whats-convert-api/commit/22699d80f1bab3ac0d9a9f3bfa0deb120f8793f1))
+* feat: adicionar suporte a novos formatos de conversão ([da284d5ac75b0bdb8a2cceee92409bf660b6fa09](https://github.com/guilhermejansen/whats-convert-api/commit/da284d5ac75b0bdb8a2cceee92409bf660b6fa09))
+
 ## 1.1.0 (2025-09-26)
 
 * feat: adicionar suporte ao Swagger para documentação da API ([50482e8acf921f41436059728ba525a6fbd5c275](https://github.com/guilhermejansen/whats-convert-api/commit/50482e8acf921f41436059728ba525a6fbd5c275))
