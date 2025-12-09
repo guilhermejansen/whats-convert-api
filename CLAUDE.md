@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-WhatsApp Media Converter API is a high-performance Go service optimized for converting audio and image files for WhatsApp. The service is built with Go 1.25.1 and Fiber v3.0, capable of processing 1000+ conversions per second with sub-500ms latency.
+WhatsApp Media Converter API is a high-performance Go service optimized for converting audio and image files for WhatsApp. The service is built with Go 1.25.5 and Fiber v3.0, capable of processing 1000+ conversions per second with sub-500ms latency.
 
 ## Core Architecture
 
@@ -170,8 +170,8 @@ make monitoring-up
 - **godotenv**: Environment variable management
 
 ### System Dependencies (for local development)
-- **FFmpeg 6.0+**: Audio processing
-- **libvips 8.15+**: Image processing (3-8x faster than ImageMagick)
+- **FFmpeg 8.0.1+**: Audio processing (with Vulkan, AV1, HEVC support)
+- **libvips 8.17+**: Image processing (3-8x faster than ImageMagick)
 
 ### Development Tools
 - **air**: Hot reload for development

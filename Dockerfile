@@ -1,5 +1,5 @@
 # Build stage
-FROM golang:1.25.4-alpine AS builder
+FROM golang:1.25.5-alpine AS builder
 
 ARG VERSION=dev
 
@@ -29,7 +29,7 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
     cmd/api/main.go
 
 # Runtime stage
-FROM alpine:3.20
+FROM alpine:3.23
 
 ARG VERSION=dev
 

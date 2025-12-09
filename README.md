@@ -169,7 +169,8 @@ The S3 upload handler buffers multipart files in-memory to guarantee determinist
 
 - Docker 24+
 - Docker Compose v2+
-- FFmpeg and libvips when running locally (`make install-deps-mac` or `make install-deps-ubuntu`)
+- Go 1.25.5+ (for local development)
+- FFmpeg 8.0.1+ and libvips 8.17+ when running locally (`make install-deps-mac` or `make install-deps-ubuntu`)
 
 ### Launch with Docker
 
