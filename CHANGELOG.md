@@ -1,3 +1,7 @@
+## <small>1.3.1 (2025-12-09)</small>
+
+* fix: corrigir versão do Go no Dockerfile e formatação gofmt ([5d3418c808ecbde84217d5bfb370046fe267b218](https://github.com/guilhermejansen/whats-convert-api/commit/5d3418c808ecbde84217d5bfb370046fe267b218))
+
 ## 1.3.0 (2025-12-09)
 
 * feat: atualizar dependências e adicionar suporte completo a WebM ([698f6d68d132fe94afa4b8b93c907165f5a2e51c](https://github.com/guilhermejansen/whats-convert-api/commit/698f6d68d132fe94afa4b8b93c907165f5a2e51c))
