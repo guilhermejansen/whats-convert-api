@@ -118,21 +118,22 @@ func (ac *AudioConverter) convertToOpus(ctx context.Context, input []byte) ([]by
 	cmd := exec.CommandContext(ctx, "ffmpeg",
 		"-hide_banner",       // Hide FFmpeg banner
 		"-loglevel", "error", // Only show errors
-		"-i", "pipe:0", // Input from stdin
-		"-c:a", "libopus", // Opus codec
-		"-b:a", "128k", // Bitrate 128kbps (WhatsApp standard)
-		"-vbr", "on", // Variable bitrate for better quality
+		"-i", "pipe:0",       // Input from stdin
+		"-vn",                // Ignore video streams (important for WebM)
+		"-map", "0:a:0",      // Select only first audio stream
+		"-c:a", "libopus",    // Opus codec
+		"-b:a", "128k",       // Bitrate 128kbps (WhatsApp standard)
+		"-vbr", "on",         // Variable bitrate for better quality
 		"-compression_level", "10", // Maximum compression quality
-		"-application", "voip", // Optimized for voice (WhatsApp voice notes)
-		"-frame_duration", "20", // Frame duration in ms
-		"-packet_loss", "10", // Expected packet loss percentage
-		"-cutoff", "20000", // Frequency cutoff (20kHz)
-		"-ar", "48000", // Sample rate 48kHz (Opus standard)
-		"-ac", "1", // Mono (WhatsApp uses mono for voice)
-		"-f", "opus", // Output format
-		"-threads", "0", // Use all available CPU threads
-		"-preset", "ultrafast", // Fastest encoding preset
-		"pipe:1", // Output to stdout
+		"-application", "voip",     // Optimized for voice (WhatsApp voice notes)
+		"-frame_duration", "20",    // Frame duration in ms
+		"-packet_loss", "10",       // Expected packet loss percentage
+		"-cutoff", "20000",         // Frequency cutoff (20kHz)
+		"-ar", "48000",             // Sample rate 48kHz (Opus standard)
+		"-ac", "1",                 // Mono (WhatsApp uses mono for voice)
+		"-f", "ogg",                // OGG container (WhatsApp compatible)
+		"-threads", "0",            // Use all available CPU threads
+		"pipe:1",                   // Output to stdout
 	)
 
 	// Set up pipes
@@ -171,6 +172,8 @@ func (ac *AudioConverter) convertToOpusAdvanced(ctx context.Context, input []byt
 		"-hide_banner",
 		"-loglevel", "error",
 		"-i", "pipe:0",
+		"-vn",           // Ignore video streams (important for WebM)
+		"-map", "0:a:0", // Select only first audio stream
 		"-c:a", "libopus",
 		"-b:a", bitrate, // Custom bitrate
 		"-vbr", "on",
@@ -179,7 +182,7 @@ func (ac *AudioConverter) convertToOpusAdvanced(ctx context.Context, input []byt
 		"-ar", "48000",
 		"-ac", channels, // Custom channel config
 		"-filter:a", "loudnorm=I=-16:LRA=11:TP=-1.5", // Normalize audio levels
-		"-f", "opus",
+		"-f", "ogg", // OGG container (WhatsApp compatible)
 		"-threads", "0",
 		"pipe:1",
 	)

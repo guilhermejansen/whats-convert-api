@@ -199,7 +199,7 @@ func (p *AWSS3Provider) MultipartUpload(ctx context.Context, key string, reader 
 		partInput := &s3.UploadPartInput{
 			Bucket:     aws.String(p.config.Bucket),
 			Key:        aws.String(key),
-			PartNumber: partNumber,
+			PartNumber: aws.Int32(partNumber),
 			UploadId:   createResult.UploadId,
 			Body:       strings.NewReader(string(buffer[:n])),
 		}
@@ -217,7 +217,7 @@ func (p *AWSS3Provider) MultipartUpload(ctx context.Context, key string, reader 
 
 		completedParts = append(completedParts, types.CompletedPart{
 			ETag:       partResult.ETag,
-			PartNumber: partNumber,
+			PartNumber: aws.Int32(partNumber),
 		})
 
 		totalBytesTransferred += int64(n)
@@ -372,7 +372,7 @@ func (p *AWSS3Provider) GetObjectInfo(ctx context.Context, key string) (*ObjectI
 
 	info := &ObjectInfo{
 		Key:          key,
-		Size:         result.ContentLength,
+		Size:         aws.ToInt64(result.ContentLength),
 		ETag:         aws.ToString(result.ETag),
 		ContentType:  aws.ToString(result.ContentType),
 		LastModified: aws.ToTime(result.LastModified),

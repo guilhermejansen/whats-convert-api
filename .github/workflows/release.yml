@@ -30,9 +30,9 @@ jobs:
         run: git config log.date iso8601-strict
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 22
 
       - name: Install release tooling
         run: npm install
@@ -89,7 +89,7 @@ jobs:
 
       - name: Build and push Docker images
         if: steps.semantic.outputs.new_release_published == 'true'
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           push: true

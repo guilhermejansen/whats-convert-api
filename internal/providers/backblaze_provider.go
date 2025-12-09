@@ -200,7 +200,7 @@ func (p *BackblazeProvider) MultipartUpload(ctx context.Context, key string, rea
 		partInput := &s3.UploadPartInput{
 			Bucket:     aws.String(p.config.Bucket),
 			Key:        aws.String(key),
-			PartNumber: partNumber,
+			PartNumber: aws.Int32(partNumber),
 			UploadId:   createResult.UploadId,
 			Body:       strings.NewReader(string(buffer[:n])),
 		}
@@ -218,7 +218,7 @@ func (p *BackblazeProvider) MultipartUpload(ctx context.Context, key string, rea
 
 		completedParts = append(completedParts, types.CompletedPart{
 			ETag:       partResult.ETag,
-			PartNumber: partNumber,
+			PartNumber: aws.Int32(partNumber),
 		})
 
 		totalBytesTransferred += int64(n)
@@ -373,7 +373,7 @@ func (p *BackblazeProvider) GetObjectInfo(ctx context.Context, key string) (*Obj
 
 	info := &ObjectInfo{
 		Key:          key,
-		Size:         result.ContentLength,
+		Size:         aws.ToInt64(result.ContentLength),
 		ETag:         aws.ToString(result.ETag),
 		ContentType:  aws.ToString(result.ContentType),
 		LastModified: aws.ToTime(result.LastModified),

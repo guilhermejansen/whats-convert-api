@@ -141,7 +141,7 @@ class MediaConverterApp {
 
         const icons = {
             // Audio
-            mp3: '🎵', wav: '🎵', ogg: '🎵', m4a: '🎵', aac: '🎵', flac: '🎵', opus: '🎵', oga: '🎵',
+            mp3: '🎵', wav: '🎵', ogg: '🎵', m4a: '🎵', aac: '🎵', flac: '🎵', opus: '🎵', oga: '🎵', webm: '🎵', weba: '🎵',
             // Images
             jpg: '🖼️', jpeg: '🖼️', png: '🖼️', gif: '🖼️', webp: '🖼️', svg: '🖼️',
             // Video
@@ -180,7 +180,7 @@ class MediaConverterApp {
 
     isAudioFile(fileName) {
         const ext = fileName.split('.').pop().toLowerCase();
-        const audioExts = ['mp3', 'wav', 'ogg', 'm4a', 'aac', 'flac', 'wma', 'opus', 'oga'];
+        const audioExts = ['mp3', 'wav', 'ogg', 'm4a', 'aac', 'flac', 'wma', 'opus', 'oga', 'webm', 'weba'];
         return audioExts.includes(ext);
     }
 
