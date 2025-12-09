@@ -1,3 +1,7 @@
+## 1.3.0 (2025-12-09)
+
+* feat: atualizar dependências e adicionar suporte completo a WebM ([698f6d68d132fe94afa4b8b93c907165f5a2e51c](https://github.com/guilhermejansen/whats-convert-api/commit/698f6d68d132fe94afa4b8b93c907165f5a2e51c))
+
 ## <small>1.2.4 (2025-09-26)</small>
 
 * Merge branch 'main' of github.com:guilhermejansen/whats-convert-api ([d4dfa482a58624a55b03a8c4ffcaf2d6dc233e74](https://github.com/guilhermejansen/whats-convert-api/commit/d4dfa482a58624a55b03a8c4ffcaf2d6dc233e74))
